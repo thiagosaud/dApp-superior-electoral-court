@@ -1,0 +1,24 @@
+{
+  "name": "dApp-superior-electoral-court",
+  "version": "1.0.0@pre-alpha",
+  "license": "MIT",
+  "keywords": [
+    "dApps",
+    "web3-dapp",
+    "blockchain-technology",
+    "solidity",
+    "ethereum",
+    "smart contracts",
+    "superior-electoral-court",
+    "TSE"
+  ],
+  "description": "In this open source project, I use smart contract (solidity), blockchain and WEB3 technology to simulate TSE ballot boxes and, most importantly, with incorruptible transparent votes.",
+  "author": {
+    "name": "THIAGO DE BONIS CARVALHO SAAD SAUD",
+    "url": "https://www.linkedin.com/in/thiagosaud/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thiagosaud/dApp-superior-electoral-court.git"
+  }
+}
