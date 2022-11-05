@@ -1,0 +1,27 @@
+{
+	// EDITOR CONFIG'S
+	"workbench.colorTheme": "Dracula",
+	"workbench.iconTheme": "material-icon-theme",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.renderLineHighlight": "gutter",
+	"editor.renderWhitespace": "all",
+	"editor.fontFamily": "Fira Code",
+	"editor.rulers": [140, 140],
+	"editor.fontSize": 16,
+	"editor.lineHeight": 24,
+	"editor.tabSize": 2,
+	"editor.fontLigatures": true,
+	"editor.inlineSuggest.enabled": true,
+	"editor.insertSpaces": true,
+	"editor.detectIndentation": true,
+	"editor.formatOnSave": true,
+	"diffEditor.ignoreTrimWhitespace": false,
+
+	// EDITOR FORMATTER CONFIG'S
+	"[html]": {
+		"editor.defaultFormatter": "vscode.html-language-features"
+	},
+	"[solidity]": {
+		"editor.defaultFormatter": "NomicFoundation.hardhat-solidity"
+	}
+}

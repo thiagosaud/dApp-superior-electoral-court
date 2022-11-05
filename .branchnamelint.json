@@ -1,0 +1,25 @@
+{
+	"branchNameLinter": {
+		"prefixes": ["feat", "fix", "chore", "docs", "refactor", "style", "ci", "perf", "test"],
+		"separator": "/",
+		"suggestions": {
+			"feat": "feat",
+			"fix": "fix",
+			"chore": "chore",
+			"docs": "docs",
+			"refactor": "refactor",
+			"style": "style",
+			"ci": "ci",
+			"perf": "perf",
+			"test": "test"
+		},
+		"skip": ["skip-ci"],
+		"banned": ["wip", "master", "main", "develop", "homolog", "dsv", "hml", "prd"],
+		"disallowed": ["main", "master", "develop", "homolog", "dsv", "hml", "prd"],
+		"msgBranchBanned": "Branches with the name \"%s\" are not allowed.",
+		"msgBranchDisallowed": "Pushing to \"%s\" is not allowed.",
+		"msgPrefixNotAllowed": "Branch prefix \"%s\" is not allowed.",
+		"msgPrefixSuggestion": "Instead of \"%s\" try \"%s\".",
+		"msgseparatorRequired": "Branch \"%s\" must contain a separator \"%s\"."
+	}
+}

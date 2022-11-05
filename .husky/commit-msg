@@ -1,0 +1,20 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# GLOBAL
+yarn commitlint:check
+yarn branchnamelint:check
+
+# FRONTEND
+cd frontend
+yarn lint
+yarn prettier:check
+yarn stylelint-health:check
+yarn stylelint:check
+
+# BACKACKEND
+cd ..
+cd backend
+yarn lint-contracts:check
+yarn lint:check
+yarn test
