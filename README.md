@@ -1,4 +1,4 @@
-![SOCIAL PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/social-%20preview.png "DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD")
+![SOCIAL PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/social-preview.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
 
 #
 
@@ -18,9 +18,9 @@
 </p>
 
 <p align="center">
-  <a href="#rocket-about-the-challenge">About the Project</a>
+  <a href="#rocket-about-the-project">About the Project</a>
   &nbsp;&nbsp;
-  |&nbsp;&nbsp;&nbsp;<a href="#electric_plug-how-to-use">How to Use</a>
+  |&nbsp;&nbsp;&nbsp;<a href="#electric_plug-how-it-works">How it Works?</a>
   &nbsp;
   |&nbsp;&nbsp;&nbsp;<a href="#memo-license">License</a>
   &nbsp;
@@ -29,16 +29,38 @@
 
 ## :rocket: About the Project
 
-_This is a work of my own, where I use [SMART CONTRACT TECHNOLOGY (SOLIDITY)](https://docs.soliditylang.org/en/v0.8.17/), [BLOCKCHAIN](https://en.wikipedia.org/wiki/Blockchain), [WEB3](https://web3.foundation/about/) and [METAMASK](https://metamask.io/) to simulate [TSE](https://www.tse.jus.br/) ballot boxes, and most importantly, with transparent votes and without it being possible to tamper with them in any way._
+_This is a work of my own, where I use [REACTJS](https://reactjs.org/), [SMART CONTRACT TECHNOLOGY (SOLIDITY)](https://docs.soliditylang.org/en/v0.8.17/), [BLOCKCHAIN](https://en.wikipedia.org/wiki/Blockchain), [WEB3](https://web3.foundation/about/) [ETHERS](https://www.npmjs.com/package/ethers), [HARDHAT](https://hardhat.org/hardhat-runner/docs/) and [METAMASK](https://metamask.io/) to simulate [TSE](https://www.tse.jus.br/) ballot boxes, and most importantly, with transparent votes and without it being possible to tamper with them in any way._
 
-## :electric_plug: How to use
-
-This README is from the root directory, in this case, this project will be a monorepository, where it will contain the root hierarchy and two hierarchies, which are:
+This project will be a monorepository, where it will contain the root hierarchy and two hierarchies, which are:
 
 - **FRONTEND (Web3)**
-- **SOLIDITY (Smart Contracts)**
+- **BACKEND (Smart Contracts with Solidity)**
 
 Each project will contain its own hierarchy and dependency control, so to learn more about each project, go to each project's main folder.
+
+## :electric_plug: How it works ?
+
+![HOW IT WORKS PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/how-its-work.png.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
+
+This is a simple working flow, which was covered in this project.
+
+Where the voter is required to connect his cryptocurrency wallet to the system (_metamask_), and he is identified through the unique hash that the wallet has.
+
+Soon after, it is necessary for him to have an X amount of the token to be used by the system, in this case we are using _ethereum_.
+
+The system validates the connection of your wallet and the necessary amount of _ethereum_, if everything is correct, the voting actions are released for it.
+
+The voter chooses his candidate and the system (_web + ethers_) validates the form and processes the data, along with the _hash_ of his wallet and the necessary amount of _ethereum_ needed for this on the _blockchain_ (_where the contract is located_).
+
+In the _blockchain_, a block is generated in the _blockchain_, where the miner validates that block.
+
+After the validation of that bit, which would actually be the processing of the contract that is part of a program (_where you can find who voted, who voted for and when they voted_).
+
+After processing, the data is saved on the _blockchain_ forever and can never be tampered with and the system (_web + ethers_) receives real-time voting information as if it were _websockets_.
+
+**⚠️ Note: That it is not necessary to handle the data from the electronic voting machine to do the accounting and save the data, in addition, the blockchain works like an accounting ledger, it is not and cannot be tampered with, maintaining consistency and legitimacy in its information.**
+
+**⚠️ Note II: Remember that this is an approach to present the power of the blockchain and its legitimacy towards the data, but to make the "electronic voting machine" even more secure, the government must use unique hash of wallets interconnected with the document of each citizen and use facial recognition and (human) object detection to distinguish siblings, images of real people and to further reinforce, use fingerprint identification.**
 
 ## :memo: License
 
