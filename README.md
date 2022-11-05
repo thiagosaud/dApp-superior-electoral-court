@@ -13,8 +13,6 @@
   <img src="https://img.shields.io/github/languages/count/thiagosaud/dApp-superior-electoral-court?color=%2362df5e&logoColor=%2362df5e" />
   <img src="https://img.shields.io/github/v/release/thiagosaud/dApp-superior-electoral-court?include_prereleases?color=%2362df5e&logoColor=%2362df5e" />
   <img src="https://img.shields.io/github/last-commit/thiagosaud/dApp-superior-electoral-court?color=%2362df5e&logoColor=%2362df5e" />
-  <img src="https://img.shields.io/github/issues-raw/thiagosaud/dApp-superior-electoral-court?color=%2362df5e&logoColor=%2362df5e" />
-  <img src="https://img.shields.io/github/issues-pr-raw/thiagosaud/dApp-superior-electoral-court?color=%2362df5e&logoColor=%2362df5e" />
 </p>
 
 ## :rocket: About the Project
