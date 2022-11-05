@@ -17,16 +17,6 @@
   <img src="https://img.shields.io/github/issues-pr-raw/thiagosaud/dApp-superior-electoral-court?color=%2362df5e&logoColor=%2362df5e" />
 </p>
 
-<p align="center">
-  <a href="#rocket-about-the-project">About the Project</a>
-  &nbsp;&nbsp;
-  |&nbsp;&nbsp;&nbsp;<a href="#electric_plug-how-it-works">How it Works?</a>
-  &nbsp;
-  |&nbsp;&nbsp;&nbsp;<a href="#memo-license">License</a>
-  &nbsp;
-  |&nbsp;&nbsp;&nbsp;<a href="#heartpulse-sponsor">Sponsor</a>
-</p>
-
 ## :rocket: About the Project
 
 _This is a work of my own, where I use [REACTJS](https://reactjs.org/), [SMART CONTRACT TECHNOLOGY (SOLIDITY)](https://docs.soliditylang.org/en/v0.8.17/), [BLOCKCHAIN](https://en.wikipedia.org/wiki/Blockchain), [WEB3](https://web3.foundation/about/) [ETHERS](https://www.npmjs.com/package/ethers), [HARDHAT](https://hardhat.org/hardhat-runner/docs/) and [METAMASK](https://metamask.io/) to simulate [TSE](https://www.tse.jus.br/) ballot boxes, and most importantly, with transparent votes and without it being possible to tamper with them in any way._
@@ -38,7 +28,7 @@ This project will be a monorepository, where it will contain the root hierarchy 
 
 Each project will contain its own hierarchy and dependency control, so to learn more about each project, go to each project's main folder.
 
-## :electric_plug: How it works ?
+## :electric_plug: How it works
 
 ![HOW IT WORKS PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/feat/initial/temp/imgs/how-its-work.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
 
