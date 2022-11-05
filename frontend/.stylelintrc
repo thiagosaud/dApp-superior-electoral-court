@@ -1,0 +1,20 @@
+{
+	"defaultSeverity": "error",
+	"processors": ["stylelint-processor-styled-components"],
+	"extends": [
+		"stylelint-config-standard",
+		"stylelint-config-styled-components",
+		"stylelint-config-recess-order",
+		"stylelint-config-prettier"
+	],
+	"overrides": [
+		{
+			"files": ["src/**/*.ts?(x)"],
+			"excludedFiles": "src/**/*.test.ts?(x)",
+			"customSyntax": "postcss-scss"
+		}
+	],
+	"rules": {
+		"value-keyword-case": null
+	}
+}
