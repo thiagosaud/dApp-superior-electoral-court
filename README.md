@@ -1,4 +1,4 @@
-![SOCIAL PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/social-preview.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
+![SOCIAL PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/feat/initial/temp/imgs/social-preview.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
 
 #
 
@@ -40,7 +40,7 @@ Each project will contain its own hierarchy and dependency control, so to learn 
 
 ## :electric_plug: How it works ?
 
-![HOW IT WORKS PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/how-its-work.png.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
+![HOW IT WORKS PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/feat/initial/temp/imgs/how-its-work.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
 
 This is a simple working flow, which was covered in this project.
 
