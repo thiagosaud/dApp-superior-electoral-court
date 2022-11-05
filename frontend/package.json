@@ -1,0 +1,72 @@
+{
+	"name": "frontend",
+	"version": "1.0.0@pre-alpha",
+	"license": "MIT",
+	"description": "This is our open source frontend project. In this project we can analyze the development of our dApp with reactjs, typescript, ethers and etc.",
+	"author": {
+		"name": "THIAGO DE BONIS CARVALHO SAAD SAUD",
+		"url": "https://www.linkedin.com/in/thiagosaud/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/thiagosaud/dApp-superior-electoral-court.git"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"lint": "eslint \"src/**/*.ts?(x)\" --max-warnings 0",
+		"prettier:check": "prettier \"src/**/*.ts?(x)\" --check",
+		"stylelint:check": "stylelint  \"src/**/*.ts?(x)\" --max-warnings 0",
+		"stylelint-health:check": "stylelint-config-prettier-check"
+	},
+	"dependencies": {
+		"@testing-library/jest-dom": "^5.16.5",
+		"@testing-library/react": "^13.4.0",
+		"@testing-library/user-event": "^14.4.3",
+		"@types/jest": "^29.1.0",
+		"@types/node": "^18.7.23",
+		"@types/react": "^18.0.21",
+		"@types/react-dom": "^18.0.6",
+		"@types/styled-components": "^5.1.26",
+		"eslint-config-react": "^1.1.7",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-scripts": "5.0.1",
+		"styled-components": "^5.3.6",
+		"typescript": "^4.8.4",
+		"web-vitals": "^3.0.2"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.38.1",
+		"@typescript-eslint/parser": "^5.38.1",
+		"eslint": "^8.24.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-config-airbnb-typescript": "^17.0.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-config-react-app": "^7.0.1",
+		"eslint-config-stylelint": "^16.0.0",
+		"eslint-import-resolver-typescript": "^3.5.1",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-import-helpers": "^1.2.1",
+		"eslint-plugin-jest": "^27.0.4",
+		"eslint-plugin-jest-dom": "^4.0.2",
+		"eslint-plugin-jsx-a11y": "^6.6.1",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-react": "^7.31.8",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-testing-library": "^5.7.0",
+		"postcss": "^8.4.16",
+		"postcss-syntax": "^0.36.2",
+		"prettier": "^2.7.1",
+		"stylelint": "^14.13.0",
+		"stylelint-config-prettier": "^9.0.3",
+		"stylelint-config-recess-order": "^3.0.0",
+		"stylelint-config-recommended": "^9.0.0",
+		"stylelint-config-standard": "^28.0.0",
+		"stylelint-config-standard-scss": "^5.0.0",
+		"stylelint-config-styled-components": "^0.1.1",
+		"stylelint-processor-styled-components": "^1.10.0"
+	}
+}
