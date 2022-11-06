@@ -31,7 +31,7 @@ function HomePage() {
 						// eslint-disable-next-line no-console
 						onConfirmVote: number => console.log(number),
 						number: 1,
-						avatar: 'https://classic.exame.com/wp-content/uploads/2021/05/LULA-RICARDO-STUCKERT.jpg?quality=70&strip=info&w=1024',
+						avatar: 'https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/cadidate-1.png',
 						hasVoted: true,
 						votesConfirmed: {
 							total: 124252799,
@@ -42,7 +42,7 @@ function HomePage() {
 						// eslint-disable-next-line no-console
 						onConfirmVote: number => console.log(number),
 						number: 2,
-						avatar: 'https://classic.exame.com/wp-content/uploads/2021/05/LULA-RICARDO-STUCKERT.jpg?quality=70&strip=info&w=1024',
+						avatar: 'https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/cadidate-2.png',
 						hasVoted: false,
 						votesConfirmed: {
 							total: 124252796,
@@ -53,7 +53,7 @@ function HomePage() {
 						// eslint-disable-next-line no-console
 						onConfirmVote: number => console.log(number),
 						number: 3,
-						avatar: 'https://classic.exame.com/wp-content/uploads/2021/05/LULA-RICARDO-STUCKERT.jpg?quality=70&strip=info&w=1024',
+						avatar: 'https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/cadidate-3.png',
 						hasVoted: false,
 						votesConfirmed: {
 							total: 124252796,
@@ -64,7 +64,7 @@ function HomePage() {
 						// eslint-disable-next-line no-console
 						onConfirmVote: number => console.log(number),
 						number: 4,
-						avatar: 'https://classic.exame.com/wp-content/uploads/2021/05/LULA-RICARDO-STUCKERT.jpg?quality=70&strip=info&w=1024',
+						avatar: 'https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/cadidate-4.png',
 						hasVoted: false,
 						votesConfirmed: {
 							total: 124252796,
@@ -75,7 +75,7 @@ function HomePage() {
 						// eslint-disable-next-line no-console
 						onConfirmVote: number => console.log(number),
 						number: 5,
-						avatar: 'https://classic.exame.com/wp-content/uploads/2021/05/LULA-RICARDO-STUCKERT.jpg?quality=70&strip=info&w=1024',
+						avatar: 'https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/cadidate-5.png',
 						hasVoted: false,
 						votesConfirmed: {
 							total: 124252796,
@@ -86,7 +86,7 @@ function HomePage() {
 						// eslint-disable-next-line no-console
 						onConfirmVote: number => console.log(number),
 						number: 6,
-						avatar: 'https://classic.exame.com/wp-content/uploads/2021/05/LULA-RICARDO-STUCKERT.jpg?quality=70&strip=info&w=1024',
+						avatar: 'https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/cadidate-6.png',
 						hasVoted: false,
 						votesConfirmed: {
 							total: 124252796,
