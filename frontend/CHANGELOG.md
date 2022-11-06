@@ -31,6 +31,7 @@ Use the pattern below:
 - Added Module Directory in import settings [ESLINT];
 - Imported Bootstrap CSS [LIB];
 - Changed Candidate Avatar SRC [HOME_PAGE];
+- Changed the Candidate Avatar SRC [HOME_PAGE] 2x;
 - Created Initial Number Conversion [HOOK];
 - Created Initial Router [COMPONENT];
 - Created Initial App [COMPONENT];
