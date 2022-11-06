@@ -23,6 +23,26 @@ Use the pattern below:
 - Created Cleaned Initial Project Config;
 - Created Style-Guide Config;
 
+## Version [1.0.0@alpha] (06/11/2022)
+
+### :guitar: FEAT
+
+- Added Candidate Avatar Images [TEMP];
+- Added Module Directory in import settings [ESLINT];
+- Imported Bootstrap CSS [LIB];
+- Changed Candidate Avatar SRC [HOME_PAGE];
+- Created Initial Number Conversion [HOOK];
+- Created Initial Router [COMPONENT];
+- Created Initial App [COMPONENT];
+- Created Initial TemplatePage [COMPONENT];
+- Created Initial Avatar [COMPONENT];
+- Created Initial HomePage [COMPONENT];
+- Created Initial Logotype [COMPONENT];
+- Created Initial VotingStatisticList [COMPONENT];
+- Created Initial VotingStatisticList [COMPONENT];
+- Created Initial FooterbarGlobal [COMPONENT];
+- Created Initial AppbarGlobal [COMPONENT];
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
