@@ -37,6 +37,7 @@ module.exports = {
 			node: {
 				paths: ['src'],
 				extensions: ['.ts', '.tsx'],
+				moduleDirectory: ['src', 'node_modules'],
 			},
 		},
 		react: {
