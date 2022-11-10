@@ -12,5 +12,5 @@ interface IProps {
 }
 
 export default function PageTemplate({ children }: IProps) {
-	return <CustomContainer>{children}</CustomContainer>;
+	return <CustomContainer data-testid='custom-container-component'>{children}</CustomContainer>;
 }
