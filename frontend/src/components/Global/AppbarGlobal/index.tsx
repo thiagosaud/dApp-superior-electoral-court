@@ -4,7 +4,7 @@ import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 
 export default function AppbarGlobal() {
 	return (
-		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>
+		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect data-testid>
 			<Container>
 				<Navbar.Brand className='d-flex gap-2 align-items-center'>
 					<Logotype size='xs' />
