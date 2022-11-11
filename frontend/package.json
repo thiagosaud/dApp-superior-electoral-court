@@ -15,6 +15,7 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
+		"jest": "yarn test --watchAll=false",
 		"eject": "react-scripts eject",
 		"lint": "eslint \"src/**/*.ts?(x)\" --max-warnings 0",
 		"prettier:check": "prettier \"src/**/*.ts?(x)\" --check",
