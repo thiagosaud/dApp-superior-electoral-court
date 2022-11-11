@@ -44,6 +44,7 @@ Use the pattern below:
 - Created Initial FooterbarGlobal [COMPONENT];
 - Created Initial AppbarGlobal [COMPONENT];
 
+
 ## Version [1.0.2@pre-alpha] (05/11/2022)
 
 ### :guitar: FEAT
