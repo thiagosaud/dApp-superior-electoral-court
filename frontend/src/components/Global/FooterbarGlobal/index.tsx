@@ -5,7 +5,11 @@ export default function FooterbarGlobal() {
 		<Container>
 			<Navbar.Text className='d-flex align-items-center'>
 				© All rights reserved by
-				<Button variant='link' style={{ paddingLeft: '0.3rem', color: 'white' }}>
+				<Button
+					variant='link'
+					href='https://github.com/thiagosaud/dApp-superior-electoral-court'
+					style={{ paddingLeft: '0.3rem', color: 'white' }}
+				>
 					Thiago Saud
 				</Button>
 			</Navbar.Text>

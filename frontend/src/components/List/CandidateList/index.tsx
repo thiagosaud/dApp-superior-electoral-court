@@ -25,7 +25,7 @@ function CandidateList({ data }: IProps) {
 	);
 
 	return (
-		<ListGroup>
+		<ListGroup data-testid='candidate-list-component'>
 			{data.map(({ onConfirmVote, avatar, number, votesConfirmed, hasVoted }) => (
 				<ListGroup.Item key={`${number}`} as='li' className='d-flex flex-wrap gap-2 align-items-center'>
 					<div className='d-flex justify-content-between align-items-center w-100'>
@@ -37,7 +37,7 @@ function CandidateList({ data }: IProps) {
 						<div className='mt-1 d-flex flex-wrap align-items-center gap-2'>
 							<span className='mb-1'>Votes:</span>
 
-							<Badge bg='primary' pill style={{ width: '155px' }}>
+							<Badge bg='primary' pill style={{ width: '155px' }} data-testid='badge-vote-value-component'>
 								{getVoteText(votesConfirmed.total, votesConfirmed.totalPercentage)}
 							</Badge>
 						</div>

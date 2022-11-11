@@ -27,7 +27,7 @@ function VotingStatisticList({ votes: { confirmed, abstention } }: IProps) {
 	);
 
 	return (
-		<ListGroup>
+		<ListGroup data-testid='voting-static-list-component'>
 			<ListGroup.Item as='li' className='d-flex flex-column gap-2'>
 				<h5 className='fw-bold mb-0'>Accurate Electorate</h5>
 

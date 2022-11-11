@@ -11,6 +11,7 @@ yarn lint
 yarn prettier:check
 yarn stylelint-health:check
 yarn stylelint:check
+yarn jest
 
 # BACKACKEND
 cd ..

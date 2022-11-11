@@ -23,7 +23,7 @@ Use the pattern below:
 - Created Cleaned Initial Project Config;
 - Created Style-Guide Config;
 
-## Version [1.0.0@alpha] (06/11/2022)
+## Version [1.0.1@alpha] (06/11/2022)
 
 ### :guitar: FEAT
 
@@ -43,6 +43,28 @@ Use the pattern below:
 - Created Initial VotingStatisticList [COMPONENT];
 - Created Initial FooterbarGlobal [COMPONENT];
 - Created Initial AppbarGlobal [COMPONENT];
+
+
+## Version [1.0.2@pre-alpha] (05/11/2022)
+
+### :guitar: FEAT
+
+- Updated Version and Added new Libs [PACKAGE]
+- Removed README.md [FRONTEND]
+- Created Mocks
+
+### :ring: TEST
+
+- Created Test [VOTING STATISTIC LIST]
+- Created Test [CANDIDATE LIST]
+- Created Test [NUMBER CONVERSION HOOK]
+- Created Test [HOME PAGE]
+- Created Test [LOGOTYPE UTIL]
+- Created Test [AVATAR UTIL]
+- Created Test [FOOTER BAR GLOBAL]
+- Created Test [APP BAR GLOBAL]
+- Created Test [TEMPLATE PAGE]
+- Created Test [ROUTER]
 
 ---
 
