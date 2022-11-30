@@ -23,6 +23,20 @@ Use the pattern below:
 - Created Cleaned Initial Project Config;
 - Created Style-Guide Config;
 
+## Version [1.0.1@alpha] (29/11/2022)
+
+### :guitar: FEAT
+
+- Compiled Contract [BIN];
+- Created Real Testnet Deploy;
+- Created Contracts;
+- Changed Solhint Style Guide Config;
+- Changed Hardhat Config;
+
+### :ring: TEST
+
+- Created Ballot Test;
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
