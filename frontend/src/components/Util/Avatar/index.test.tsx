@@ -1,6 +1,6 @@
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
-import Avatar from './index';
+import Avatar from '.';
 
 describe('[AVATAR UTIL] - Testing Component', () => {
 	test('Should be have properties!', () => {
