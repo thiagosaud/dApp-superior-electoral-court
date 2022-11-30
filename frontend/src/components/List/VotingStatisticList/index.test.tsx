@@ -1,7 +1,7 @@
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import MOCKED_DATA, { IData } from '__test__/mocks/VotingStatisticListMock';
-import VotingStatisticList from './index';
+import VotingStatisticList from '.';
 
 describe('[VOTING STATISTIC LIST] - Testing Component', () => {
 	test('Should be have childs component!', () => {

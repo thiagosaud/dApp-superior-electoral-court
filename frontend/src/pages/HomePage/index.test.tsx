@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import HomePage from './index';
+import HomePage from '.';
 
 describe('[HOME PAGE] - Testing Component', () => {
 	test('Should be have childs component!', () => {

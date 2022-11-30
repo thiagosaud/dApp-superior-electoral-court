@@ -1,6 +1,6 @@
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
-import TemplatePage from './index';
+import TemplatePage from '.';
 
 describe('[TEMPLATE PAGE] - Testing Component', () => {
 	test('Should be have children!', () => {

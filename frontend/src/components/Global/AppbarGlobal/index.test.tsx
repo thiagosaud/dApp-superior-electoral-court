@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import AppbarGlobal from './index';
+import AppbarGlobal from '.';
 
 describe('[APP BAR GLOBAL] - Testing Component', () => {
 	test('Should be have childs component!', async () => {

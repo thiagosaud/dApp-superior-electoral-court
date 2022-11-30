@@ -1,7 +1,7 @@
 import TestRenderer from 'react-test-renderer';
 import { fireEvent, render, screen } from '@testing-library/react';
 import MOCKED_DATA, { IData } from '__test__/mocks/CandidateListMock';
-import CandidateList from './index';
+import CandidateList from '.';
 
 describe('[CANDIDATE LIST] - Testing Component', () => {
 	test('Should be have data!', () => {

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import FooterbarGlobal from './index';
+import FooterbarGlobal from '.';
 
 describe('[FOOTER BAR GLOBAL] - Testing Component', () => {
 	test('Should be have childs component!', () => {

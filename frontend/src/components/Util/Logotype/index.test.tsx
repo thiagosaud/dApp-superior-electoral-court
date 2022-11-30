@@ -1,6 +1,6 @@
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
-import Logotype from './index';
+import Logotype from '.';
 
 describe('[LOGOTYPE UTIL] - Testing Component', () => {
 	test('Should be have Size Property!', () => {
