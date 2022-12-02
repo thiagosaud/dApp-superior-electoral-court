@@ -65,11 +65,17 @@ Use the pattern below:
 - Created Test [TEMPLATE PAGE]
 - Created Test [ROUTER]
 
-## Version [1.0.3@pre-alpha] (29/11/2022)
+## Version [1.0.3@palpha] (29/11/2022)
 
 ### :bug: FIX
 
 - Correction in Path [TESTS]
+
+## Version [1.0.4@alpha] (2/12/2022)
+
+### :bug: FIX
+
+- Correction in Unit Test [ROUTER]
 
 ---
 
