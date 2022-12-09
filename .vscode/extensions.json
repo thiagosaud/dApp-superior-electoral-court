@@ -1,3 +1,21 @@
 {
-	"recommendations": []
+	"recommendations": [
+		"firefox-devtools.vscode-firefox-debug",
+		"mikestead.dotenv",
+		"EditorConfig.EditorConfig",
+		"dbaeumer.vscode-eslint",
+		"stylelint.vscode-stylelint",
+		"esbenp.prettier-vscode",
+		"styled-components.vscode-styled-components",
+		"ms-vscode.vscode-typescript-next",
+		"VisualStudioExptTeam.vscodeintellicode",
+		"VisualStudioExptTeam.intellicode-api-usage-examples",
+		"mhutchie.git-graph",
+		"christian-kohler.path-intellisense",
+		"formulahendry.auto-complete-tag",
+		"yzhang.markdown-all-in-one",
+		"DavidAnson.vscode-markdownlint",
+		"redhat.vscode-yaml",
+		"NomicFoundation.hardhat-solidity"
+	]
 }
