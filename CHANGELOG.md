@@ -23,6 +23,19 @@ Use the pattern below:
 - Created Cleaned Initial Project Config;
 - Created Style-Guide Config;
 
+## Version [1.0.1@pre-alpha] (09/12/2022)
+
+### :bug: FIX
+
+- Changed the file path [PULL_REQUEST_TEMPLATE.md]
+
+### :guitar: FEAT
+
+- Added the Recover Repository Secret Keys [YML ACTIONS]
+- Added extensions & Removed unnecessary config [VSCODE]
+- Sudo chmod ug+x .husky/\*
+- Updated Version [PACKAGE.JSON]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
