@@ -34,4 +34,4 @@
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
-BY [THIAGO DE BONIS CARVALHO SAAD SAUD SAUD](https://www.linkedin.com/in/thiagosaud/)**
+BY [THIAGO SAUD](https://www.linkedin.com/in/thiagosaud/)**
