@@ -1,6 +1,7 @@
 import { memo } from 'react';
-import { createGlobalStyle } from 'styled-components';
 import Router from 'Router';
+import { createGlobalStyle } from 'styled-components';
+import SolidityContractProvider from 'providers/useSolidityContractProvider';
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -11,10 +12,10 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
 	return (
-		<>
+		<SolidityContractProvider>
 			<GlobalStyle />
 			<Router />
-		</>
+		</SolidityContractProvider>
 	);
 }
 
