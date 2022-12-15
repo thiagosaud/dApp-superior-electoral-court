@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Util/Logotype';
 import ButtonSkeleton from 'components/Skeletons/ButtonSkeleton';
+import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 
 const ConnectWalletButton = lazy(() =>
 	Promise.all([
@@ -22,6 +23,11 @@ const ConnectedWalletButton = lazy(() =>
 );
 
 export default function AppbarGlobal() {
+	const {
+		states: { isConnectingWallet, isLoggingOut, wallet },
+		actions: { connect, logout },
+	} = useSolidityContractProvider();
+
 	return (
 		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>
 			<Container>
@@ -32,14 +38,11 @@ export default function AppbarGlobal() {
 
 				<Nav className='justify-content-end'>
 					<Suspense fallback={<ButtonSkeleton variant='warning' height='38px' width='136px' />}>
-						<ConnectWalletButton
-							onConnected={() => {
-								// @TODO
-							}}
-							isDisabled
-						/>
-
-						<ConnectedWalletButton wallet='0x000' />
+						{!wallet ? (
+							<ConnectWalletButton onConnected={connect} isDisabled={isConnectingWallet} />
+						) : (
+							<ConnectedWalletButton onLogout={logout} wallet={wallet} isDisabled={isLoggingOut} />
+						)}
 					</Suspense>
 				</Nav>
 			</Container>
