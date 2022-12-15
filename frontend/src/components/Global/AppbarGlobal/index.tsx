@@ -1,6 +1,25 @@
+import { lazy, Suspense } from 'react';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Util/Logotype';
-import { Button, Container, Nav, Navbar } from 'react-bootstrap';
-// import { Button, Container, Dropdown, DropdownButton, Nav, Navbar } from 'react-bootstrap';
+import ButtonSkeleton from 'components/Skeletons/ButtonSkeleton';
+
+const ConnectWalletButton = lazy(() =>
+	Promise.all([
+		import('components/Buttons/ConnectWalletButton'),
+		new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
+
+const ConnectedWalletButton = lazy(() =>
+	Promise.all([
+		import('components/Buttons/ConnectedWalletButton'),
+		new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
 
 export default function AppbarGlobal() {
 	return (
@@ -12,11 +31,16 @@ export default function AppbarGlobal() {
 				</Navbar.Brand>
 
 				<Nav className='justify-content-end'>
-					<Button variant='warning'>Connect Wallet</Button>
+					<Suspense fallback={<ButtonSkeleton variant='warning' height='38px' width='136px' />}>
+						<ConnectWalletButton
+							onConnected={() => {
+								// @TODO
+							}}
+							isDisabled
+						/>
 
-					{/* <DropdownButton title='#B3A7CCF' variant='warning'>
-						<Dropdown.Item as='button'>Logout</Dropdown.Item>
-					</DropdownButton> */}
+						<ConnectedWalletButton wallet='0x000' />
+					</Suspense>
 				</Nav>
 			</Container>
 		</Navbar>
