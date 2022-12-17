@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AppbarGlobal from 'components/Global/AppbarGlobal';
-import FooterbarGlobal from 'components/Global/FooterbarGlobal';
+import AppbarGlobal from 'components/Globals/AppbarGlobal';
+import FooterbarGlobal from 'components/Globals/FooterbarGlobal';
 import HomePage from 'pages/HomePage';
 
 function Router() {
