@@ -5,7 +5,7 @@ import VotingStatisticList from '.';
 
 describe('[VOTING STATISTIC LIST] - Testing Component', () => {
 	test('Should be have childs component!', () => {
-		render(<VotingStatisticList votes={MOCKED_DATA} />);
+		render(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
 
 		const listItem = screen.getAllByRole('listitem');
 		const progressBar = screen.getAllByRole('progressbar');
@@ -22,7 +22,7 @@ describe('[VOTING STATISTIC LIST] - Testing Component', () => {
 });
 
 describe('[VOTING STATISTIC LIST] - Testing Component Data', () => {
-	const { root } = TestRenderer.create(<VotingStatisticList votes={MOCKED_DATA} />);
+	const { root } = TestRenderer.create(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
 	const dataProps: IData = root.props.votes;
 
 	test('Should be have this properties values!', () => {
@@ -49,7 +49,7 @@ describe('[VOTING STATISTIC LIST] - Testing Component Data', () => {
 
 describe('[VOTING STATISTIC LIST] - Testing Component Progressbar', () => {
 	test('Should be have aria-valuemin attribute equal 0% and aria-valuemax equal 100%!', () => {
-		render(<VotingStatisticList votes={MOCKED_DATA} />);
+		render(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
 
 		screen.getAllByRole('progressbar').forEach(bar => {
 			expect(bar).toHaveAttribute('aria-valuemin', '0');
@@ -58,7 +58,7 @@ describe('[VOTING STATISTIC LIST] - Testing Component Progressbar', () => {
 	});
 
 	test('Should be have aria-valuenow attribute greater than or equal 0% and less then or equal 100%!', () => {
-		render(<VotingStatisticList votes={MOCKED_DATA} />);
+		render(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
 
 		screen.getAllByRole('progressbar').forEach(bar => {
 			const ariaValueNow = bar.getAttribute('aria-valuenow');

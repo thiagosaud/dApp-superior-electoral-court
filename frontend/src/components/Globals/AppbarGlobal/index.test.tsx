@@ -6,7 +6,7 @@ describe('[APP BAR GLOBAL] - Testing Component', () => {
 		render(<AppbarGlobal />);
 
 		const logotype = await screen.findByRole('img');
-		const connectWallet = screen.getByText(/Connect Wallet/i);
+		const connectWallet = await screen.findByText(/Connect Wallet/i);
 		const title = screen.getByText(/dApp - Superior Electoral Court/i);
 
 		expect(logotype).toBeInTheDocument();

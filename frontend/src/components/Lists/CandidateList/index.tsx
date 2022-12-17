@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Badge, Button, ListGroup } from 'react-bootstrap';
 import { MathJsChain } from 'mathjs';
-import Avatar from 'components/Util/Avatar';
+import Avatar from 'components/Utils/Avatar';
 
 interface IProps {
 	data: {

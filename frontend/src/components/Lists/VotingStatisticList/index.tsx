@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { MathJsChain } from 'mathjs';
 import { Badge, ListGroup, ProgressBar } from 'react-bootstrap';
-import GenericSkeleton from 'components/Util/GenericSkeleton';
+import GenericSkeleton from 'components/Utils/GenericSkeleton';
 
 interface IProps {
 	isLoading: boolean;
