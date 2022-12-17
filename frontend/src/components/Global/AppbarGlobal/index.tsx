@@ -1,12 +1,13 @@
-import { lazy, Suspense } from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { lazy, Suspense, useCallback, useEffect, useReducer, useState } from 'react';
+import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Util/Logotype';
-import ButtonSkeleton from 'components/Skeletons/ButtonSkeleton';
+import GenericSkeleton from 'components/Util/GenericSkeleton';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
+import { TypeMetaMaskStorageData } from 'hooks/useStorageDB';
 
 const ConnectWalletButton = lazy(() =>
 	Promise.all([
-		import('components/Buttons/ConnectWalletButton'),
+		import(/* webpackChunkName: "ConnectWalletButton" */ 'components/Buttons/ConnectWalletButton'),
 		new Promise(resolve => {
 			setTimeout(resolve, 1000);
 		}),
@@ -15,7 +16,7 @@ const ConnectWalletButton = lazy(() =>
 
 const ConnectedWalletButton = lazy(() =>
 	Promise.all([
-		import('components/Buttons/ConnectedWalletButton'),
+		import(/* webpackChunkName: "ConnectedWalletButton" */ 'components/Buttons/ConnectedWalletButton'),
 		new Promise(resolve => {
 			setTimeout(resolve, 1000);
 		}),
@@ -23,10 +24,38 @@ const ConnectedWalletButton = lazy(() =>
 );
 
 export default function AppbarGlobal() {
-	const {
-		states: { isConnectingWallet, isLoggingOut, wallet },
-		actions: { connect, logout },
-	} = useSolidityContractProvider();
+	const { actions, states } = useSolidityContractProvider();
+	const [isConnectingWallet, updateIsConnectingWallet] = useReducer(state => !state, false);
+	const [isDisconnectingWallet, updateIsDisconnectingWallet] = useReducer(state => !state, false);
+	const [wallet, setWallet] = useState<TypeMetaMaskStorageData>(null);
+
+	const handleOnConnectWallet = useCallback(() => {
+		updateIsConnectingWallet();
+
+		actions
+			.connect()
+			.then(newWallet => setWallet(newWallet))
+			.finally(() => updateIsConnectingWallet());
+	}, [actions]);
+
+	const handleOnDisconnecWallet = useCallback(() => {
+		updateIsDisconnectingWallet();
+
+		actions
+			.logout()
+			.then(() => setWallet(null))
+			.finally(() => updateIsDisconnectingWallet());
+	}, [actions]);
+
+	const cacheData = useCallback(() => {
+		if (!states.isLoadingDB) {
+			updateIsConnectingWallet();
+			setWallet(states.metamaskDB);
+			updateIsConnectingWallet();
+		}
+	}, [states]);
+
+	useEffect(() => cacheData(), [cacheData]);
 
 	return (
 		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>
@@ -36,15 +65,15 @@ export default function AppbarGlobal() {
 					<Navbar.Collapse>dApp - Superior Electoral Court</Navbar.Collapse>
 				</Navbar.Brand>
 
-				<Nav className='justify-content-end'>
-					<Suspense fallback={<ButtonSkeleton variant='warning' height='38px' width='136px' />}>
-						{!wallet ? (
-							<ConnectWalletButton onConnected={connect} isDisabled={isConnectingWallet} />
-						) : (
-							<ConnectedWalletButton onLogout={logout} wallet={wallet} isDisabled={isLoggingOut} />
+				<div className='justify-content-end'>
+					<Suspense fallback={<GenericSkeleton height='38px' width='136px' />}>
+						{!states.isLoadingDB && !wallet && <ConnectWalletButton onConnect={handleOnConnectWallet} isDisabled={isConnectingWallet} />}
+
+						{!states.isLoadingDB && !isConnectingWallet && wallet && (
+							<ConnectedWalletButton onLogout={handleOnDisconnecWallet} wallet={wallet} isDisabled={isDisconnectingWallet} />
 						)}
 					</Suspense>
-				</Nav>
+				</div>
 			</Container>
 		</Navbar>
 	);

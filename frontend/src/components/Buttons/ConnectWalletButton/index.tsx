@@ -1,14 +1,14 @@
 import { Button } from 'react-bootstrap';
 
 interface IProps {
-	onConnected: () => void;
+	onConnect: () => void;
 	isDisabled: boolean;
 }
 
-function ConnectWalletButton({ onConnected, isDisabled }: IProps) {
+function ConnectWalletButton({ onConnect, isDisabled }: IProps) {
 	return (
-		<Button onClick={onConnected} variant='warning' disabled={isDisabled}>
-			{isDisabled ? 'Connecting...' : 'Connect Wallet'}
+		<Button onClick={onConnect} variant='warning' disabled={isDisabled}>
+			Connect Wallet
 		</Button>
 	);
 }

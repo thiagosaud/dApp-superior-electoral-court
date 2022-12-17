@@ -8,10 +8,10 @@ interface IProps {
 }
 
 function ConnectedWalletButton({ onLogout, wallet, isDisabled }: IProps) {
-	const hash = useMemo(() => wallet?.substring(0, 11), [wallet]);
+	const hash = useMemo(() => wallet.substring(0, 11), [wallet]);
 
 	return (
-		<DropdownButton title={hash} variant='warning' disabled={isDisabled}>
+		<DropdownButton variant='warning' align='end' title={hash} disabled={isDisabled}>
 			<Dropdown.Item as='button' onClick={onLogout}>
 				Logout
 			</Dropdown.Item>
