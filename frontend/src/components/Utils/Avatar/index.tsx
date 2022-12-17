@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import SkeletonSRC from 'assets/images/skeleton.png';
 
 const Image = styled.img.attrs({
 	loading: 'lazy',
@@ -16,8 +17,9 @@ interface IProps {
 	alt: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 function Avatar({ src, alt }: IProps) {
-	return <Image src={src} alt={alt} />;
+	return <Image src={src || SkeletonSRC} alt={alt} />;
 }
 
 export default Avatar;
