@@ -49,6 +49,7 @@ module.exports = {
 	},
 	plugins: ['react', 'react-hooks', 'prettier', 'eslint-plugin-import-helpers', '@typescript-eslint'],
 	rules: {
+		'no-underscore-dangle': ['error', { allow: ['_hex'] }],
 		'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
 		'react/prop-types': 'off',
 		'react/react-in-jsx-scope': 'off',
