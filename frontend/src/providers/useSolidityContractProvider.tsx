@@ -26,11 +26,9 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 		infuraDB: null,
 	},
 	actions: {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
-		connect: async (): Promise<TypeMetaMaskStorageData> => null,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		logout: async (): Promise<void> => {},
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
+		connect: async (): Promise<TypeMetaMaskStorageData> => null,
 		getElectoralResult: async (): Promise<TypeInfuraStorageData> => null,
 	},
 };
@@ -168,7 +166,7 @@ export default function SolidityContractProvider({ children }: { children: React
 				toast('Oops... There was a problem loading the database, please try again!', { toastId: 'loading-database', type: 'error' });
 			})
 			.finally(() => setIsLoadingDB(false));
-	}, [useStorageDBHook, getElectoralResult]);
+	}, [useStorageDBHook]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }
