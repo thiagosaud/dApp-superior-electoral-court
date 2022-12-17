@@ -1,27 +1,11 @@
-import { lazy, Suspense, useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Utils/Logotype';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
+import ConnectWalletButton from 'components/Buttons/ConnectWalletButton';
+import ConnectedWalletButton from 'components/Buttons/ConnectedWalletButton';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { TypeMetaMaskStorageData } from 'hooks/useStorageDB';
-
-const ConnectWalletButton = lazy(() =>
-	Promise.all([
-		import(/* webpackChunkName: "ConnectWalletButton" */ 'components/Buttons/ConnectWalletButton'),
-		new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		}),
-	]).then(([moduleExports]) => moduleExports)
-);
-
-const ConnectedWalletButton = lazy(() =>
-	Promise.all([
-		import(/* webpackChunkName: "ConnectedWalletButton" */ 'components/Buttons/ConnectedWalletButton'),
-		new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		}),
-	]).then(([moduleExports]) => moduleExports)
-);
 
 export default function AppbarGlobal() {
 	const { actions, states } = useSolidityContractProvider();
@@ -66,13 +50,13 @@ export default function AppbarGlobal() {
 				</Navbar.Brand>
 
 				<div className='justify-content-end'>
-					<Suspense fallback={<GenericSkeleton height='38px' width='136px' />}>
-						{!states.isLoadingDB && !wallet && <ConnectWalletButton onConnect={handleOnConnectWallet} isDisabled={isConnectingWallet} />}
+					{states.isLoadingDB && <GenericSkeleton height='38px' width='136px' />}
 
-						{!states.isLoadingDB && !isConnectingWallet && wallet && (
-							<ConnectedWalletButton onLogout={handleOnDisconnecWallet} wallet={wallet} isDisabled={isDisconnectingWallet} />
-						)}
-					</Suspense>
+					{!states.isLoadingDB && !wallet && <ConnectWalletButton onConnect={handleOnConnectWallet} isDisabled={isConnectingWallet} />}
+
+					{!states.isLoadingDB && !isConnectingWallet && wallet && (
+						<ConnectedWalletButton onLogout={handleOnDisconnecWallet} wallet={wallet} isDisabled={isDisconnectingWallet} />
+					)}
 				</div>
 			</Container>
 		</Navbar>
