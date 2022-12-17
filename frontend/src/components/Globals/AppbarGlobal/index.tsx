@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useReducer, useState } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Utils/Logotype';
-import GenericSkeleton from 'components/Utils/GenericSkeleton';
+import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { TypeMetaMaskStorageData } from 'hooks/useStorageDB';
 
