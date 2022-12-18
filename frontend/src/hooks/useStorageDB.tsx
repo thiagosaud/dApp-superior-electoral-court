@@ -68,7 +68,7 @@ export default function useStorageDB(): IUseStorageDB {
 								infuraData: response[0] as TypeInfuraStorageData,
 								metamaskData: response[1] as TypeMetaMaskData,
 							});
-						}, 1000);
+						}, 2500);
 					})
 					.catch((error: DOMException) => reject(error));
 			}),
