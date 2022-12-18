@@ -2,12 +2,13 @@ import { memo } from 'react';
 import Router from 'Router';
 import { ToastContainer } from 'react-toastify';
 import { createGlobalStyle } from 'styled-components';
+import LoadingTemplate from 'templates/LoadingTemplate';
 import SolidityContractProvider from 'providers/useSolidityContractProvider';
 import { useStorageDBProvider } from 'providers/useStorageDBProvider';
 
 const GlobalStyle = createGlobalStyle`
 	body {
-		color: white;
+		color: var(--bs-white);
 		background-color: #596F99;
 	}
 `;
@@ -20,13 +21,15 @@ function App() {
 
 	return (
 		<SolidityContractProvider
-			addElectoralResultInCache={addElectoralResultInCache}
-			addWalletInCache={addWalletInCache}
-			deleteWalletCached={deleteWalletCached}
+			actions={{
+				addElectoralResultInCache,
+				addWalletInCache,
+				deleteWalletCached,
+			}}
 		>
 			<GlobalStyle />
 
-			{isLoading ? <div style={{ position: 'absolute', backgroundColor: 'red', height: '100%', width: '100%' }}>ae</div> : <Router />}
+			{isLoading ? <LoadingTemplate /> : <Router />}
 
 			<ToastContainer theme='light' position='top-right' rtl={false} draggable pauseOnFocusLoss pauseOnHover closeOnClick />
 		</SolidityContractProvider>
