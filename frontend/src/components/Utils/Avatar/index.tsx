@@ -17,7 +17,6 @@ interface IProps {
 	alt: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 function Avatar({ src, alt }: IProps) {
 	return <Image src={src || SkeletonSRC} alt={alt} />;
 }

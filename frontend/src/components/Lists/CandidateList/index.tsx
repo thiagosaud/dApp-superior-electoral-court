@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 import { memo } from 'react';
 import { Badge, Button, ListGroup } from 'react-bootstrap';
 import { MathJsChain } from 'mathjs';
