@@ -1,43 +1,59 @@
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useReducer, useState } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Utils/Logotype';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
-import ConnectWalletButton from 'components/Buttons/ConnectWalletButton';
-import ConnectedWalletButton from 'components/Buttons/ConnectedWalletButton';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
+import { useStorageDBProvider } from 'providers/useStorageDBProvider';
 import { TypeMetaMaskStorageData } from 'hooks/useStorageDB';
 
+const LazyConnectWalletButton = lazy(() =>
+	Promise.all([
+		import(/* webpackChunkName: "ConnectedWalletButton" */ 'components/Buttons/ConnectWalletButton'),
+		new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
+
+const LazyConnectedWalletButton = lazy(() =>
+	Promise.all([
+		import(/* webpackChunkName: "ConnectedWalletButton" */ 'components/Buttons/ConnectedWalletButton'),
+		new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
+
 export default function AppbarGlobal() {
-	const { actions, states } = useSolidityContractProvider();
+	const useSolidityContractProviderHook = useSolidityContractProvider();
+	const useStorageDBProviderHook = useStorageDBProvider();
 	const [isConnectingWallet, updateIsConnectingWallet] = useReducer(state => !state, false);
 	const [isDisconnectingWallet, updateIsDisconnectingWallet] = useReducer(state => !state, false);
-	const [wallet, setWallet] = useState<TypeMetaMaskStorageData>(null);
+	const [walletConnected, setWalletConnected] = useState<TypeMetaMaskStorageData>(null);
 
 	const handleOnConnectWallet = useCallback(() => {
 		updateIsConnectingWallet();
 
-		actions
+		useSolidityContractProviderHook.actions
 			.connect()
-			.then(newWallet => setWallet(newWallet))
+			.then(wallet => setWalletConnected(wallet))
 			.finally(() => updateIsConnectingWallet());
-	}, [actions]);
+	}, [useSolidityContractProviderHook]);
 
 	const handleOnDisconnecWallet = useCallback(() => {
 		updateIsDisconnectingWallet();
 
-		actions
+		useSolidityContractProviderHook.actions
 			.logout()
-			.then(() => setWallet(null))
+			.then(() => setWalletConnected(null))
 			.finally(() => updateIsDisconnectingWallet());
-	}, [actions]);
+	}, [useSolidityContractProviderHook]);
 
 	const cacheData = useCallback(() => {
-		if (!states.isLoadingDB) {
-			updateIsConnectingWallet();
-			setWallet(states.metamaskDB);
-			updateIsConnectingWallet();
+		if (useStorageDBProviderHook.dataCached.metamask) {
+			setWalletConnected(useStorageDBProviderHook.dataCached.metamask);
 		}
-	}, [states]);
+	}, [useStorageDBProviderHook]);
 
 	useEffect(() => cacheData(), [cacheData]);
 
@@ -50,13 +66,13 @@ export default function AppbarGlobal() {
 				</Navbar.Brand>
 
 				<div className='justify-content-end'>
-					{states.isLoadingDB && <GenericSkeleton height='38px' width='136px' />}
-
-					{!states.isLoadingDB && !wallet && <ConnectWalletButton onConnect={handleOnConnectWallet} isDisabled={isConnectingWallet} />}
-
-					{!states.isLoadingDB && !isConnectingWallet && wallet && (
-						<ConnectedWalletButton onLogout={handleOnDisconnecWallet} wallet={wallet} isDisabled={isDisconnectingWallet} />
-					)}
+					<Suspense fallback={<GenericSkeleton height='38px' width='136px' />}>
+						{!walletConnected ? (
+							<LazyConnectWalletButton onConnect={handleOnConnectWallet} isDisabled={isConnectingWallet} />
+						) : (
+							<LazyConnectedWalletButton onLogout={handleOnDisconnecWallet} wallet={walletConnected} isDisabled={isDisconnectingWallet} />
+						)}
+					</Suspense>
 				</div>
 			</Container>
 		</Navbar>

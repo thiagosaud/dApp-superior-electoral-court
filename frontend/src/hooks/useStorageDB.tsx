@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { IContractGetResultConverted } from 'contract/Interfaces';
 
 export type TypeInfuraData = IContractGetResultConverted;
@@ -14,46 +14,45 @@ interface IConnectFunction {
 
 interface IUseStorageDB {
 	connect: () => Promise<IConnectFunction>;
+	update: (key: TypeStorageKey, newData: TypeInfuraData | TypeMetaMaskData) => void;
 	remove: (key: TypeStorageKey) => void;
-	updateInfuraStorageData: (newData: TypeInfuraData) => void;
-	updateMetaMaskStorageData: (newData: TypeMetaMaskData) => void;
 }
 
 export default function useStorageDB(): IUseStorageDB {
-	const INFURA_STORAGE_KEY: TypeStorageKey = '@infura-provider';
-	const METAMASK_STORAGE_KEY: TypeStorageKey = '@metamask';
-
 	const storage = useCallback((key: TypeStorageKey) => (key === '@infura-provider' ? localStorage : sessionStorage), []);
 
-	const dispatchStorageEvent = useCallback((key: TypeStorageKey, newValue: TypeInfuraStorageData | TypeMetaMaskStorageData) => {
-		const NEW_DATA = JSON.stringify(newValue);
+	const dispatchStorageEvent = useCallback((key: TypeStorageKey, value: TypeInfuraStorageData | TypeMetaMaskStorageData) => {
+		let newValue: string | null = null;
+
+		if (key === '@metamask') {
+			newValue = value as TypeMetaMaskStorageData;
+		}
+
+		if (key === '@infura-provider') {
+			newValue = JSON.stringify(value as TypeInfuraStorageData);
+		}
 
 		window.dispatchEvent(
 			new StorageEvent('storage', {
 				key,
-				newValue: NEW_DATA,
+				newValue,
 			})
 		);
 	}, []);
 
-	const infuraStorageData = useMemo(
-		() =>
-			new Promise<TypeInfuraStorageData>((resolve, reject) => {
+	const asyncGetData = useCallback(
+		(key: TypeStorageKey) =>
+			new Promise<TypeInfuraStorageData | TypeMetaMaskStorageData>((resolve, reject) => {
 				try {
-					const STORAGE_DATA = storage('@infura-provider').getItem(INFURA_STORAGE_KEY);
-					resolve(STORAGE_DATA ? JSON.parse(STORAGE_DATA) : null);
-				} catch (error) {
-					reject(error);
-				}
-			}),
-		[storage]
-	);
+					const STORAGE_DATA = storage(key).getItem(key);
 
-	const metamaskStorageData = useMemo(
-		() =>
-			new Promise<TypeMetaMaskStorageData>((resolve, reject) => {
-				try {
-					resolve(storage('@metamask').getItem(METAMASK_STORAGE_KEY));
+					if (key === '@metamask') {
+						resolve(STORAGE_DATA as TypeMetaMaskStorageData);
+					}
+
+					if (key === '@infura-provider') {
+						resolve(STORAGE_DATA ? (JSON.parse(STORAGE_DATA) as TypeInfuraStorageData) : null);
+					}
 				} catch (error) {
 					reject(error);
 				}
@@ -64,18 +63,33 @@ export default function useStorageDB(): IUseStorageDB {
 	const connect = useCallback(
 		() =>
 			new Promise<IConnectFunction>((resolve, reject) => {
-				Promise.all([infuraStorageData, metamaskStorageData])
+				Promise.all([asyncGetData('@infura-provider'), asyncGetData('@metamask')])
 					.then(response => {
 						setTimeout(() => {
 							resolve({
-								infuraData: response[0],
-								metamaskData: response[1],
+								infuraData: response[0] as TypeInfuraStorageData,
+								metamaskData: response[1] as TypeMetaMaskData,
 							});
 						}, 1000);
 					})
 					.catch((error: DOMException) => reject(error));
 			}),
-		[infuraStorageData, metamaskStorageData]
+		[asyncGetData]
+	);
+
+	const update = useCallback(
+		(key: TypeStorageKey, newData: TypeInfuraData | TypeMetaMaskData) => {
+			if (key === '@metamask') {
+				storage(key).setItem(key, newData as TypeMetaMaskData);
+			}
+
+			if (key === '@infura-provider') {
+				storage(key).setItem(key, JSON.stringify(newData as TypeInfuraData));
+			}
+
+			dispatchStorageEvent(key, newData);
+		},
+		[storage, dispatchStorageEvent]
 	);
 
 	const remove = useCallback(
@@ -86,26 +100,9 @@ export default function useStorageDB(): IUseStorageDB {
 		[storage, dispatchStorageEvent]
 	);
 
-	const updateInfuraStorageData = useCallback(
-		(newData: TypeInfuraData) => {
-			storage(INFURA_STORAGE_KEY).setItem(INFURA_STORAGE_KEY, JSON.stringify(newData));
-			dispatchStorageEvent(INFURA_STORAGE_KEY, newData);
-		},
-		[storage, dispatchStorageEvent]
-	);
-
-	const updateMetaMaskStorageData = useCallback(
-		(newData: TypeMetaMaskData) => {
-			storage(METAMASK_STORAGE_KEY).setItem(METAMASK_STORAGE_KEY, newData);
-			dispatchStorageEvent(METAMASK_STORAGE_KEY, newData);
-		},
-		[storage, dispatchStorageEvent]
-	);
-
 	return {
 		connect,
+		update,
 		remove,
-		updateInfuraStorageData,
-		updateMetaMaskStorageData,
 	};
 }

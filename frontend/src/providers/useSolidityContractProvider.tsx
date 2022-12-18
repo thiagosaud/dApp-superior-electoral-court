@@ -1,17 +1,17 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import BallotContract from 'contract/Ballot.json';
 import { IContractGetResult } from 'contract/Interfaces';
-import useStorageDB, { TypeInfuraData, TypeInfuraStorageData, TypeMetaMaskStorageData } from 'hooks/useStorageDB';
+import { IStorageDBProviderActions } from 'providers/useStorageDBProvider';
+import { TypeInfuraData, TypeInfuraStorageData, TypeMetaMaskData, TypeMetaMaskStorageData } from 'hooks/useStorageDB';
+
+interface IProps extends IStorageDBProviderActions {
+	children: ReactNode;
+}
 
 interface IContextData {
-	states: {
-		isLoadingDB: boolean;
-		metamaskDB: TypeMetaMaskStorageData;
-		infuraDB: TypeInfuraStorageData;
-	};
 	actions: {
 		connect: () => Promise<TypeMetaMaskStorageData>;
 		logout: () => Promise<void>;
@@ -20,11 +20,6 @@ interface IContextData {
 }
 
 const CONTEXT_DEFAULT_DATA: IContextData = {
-	states: {
-		isLoadingDB: true,
-		metamaskDB: null,
-		infuraDB: null,
-	},
 	actions: {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		logout: async (): Promise<void> => {},
@@ -35,12 +30,7 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 
 const CONTEXT = createContext<IContextData>(CONTEXT_DEFAULT_DATA);
 
-export default function SolidityContractProvider({ children }: { children: ReactNode }) {
-	const useStorageDBHook = useStorageDB();
-	const [isLoadingDB, setIsLoadingDB] = useState(CONTEXT_DEFAULT_DATA.states.isLoadingDB);
-	const [metamaskDB, setMetamaskDB] = useState<TypeMetaMaskStorageData>(CONTEXT_DEFAULT_DATA.states.metamaskDB);
-	const [infuraDB, setInfuraDB] = useState<TypeInfuraStorageData>(CONTEXT_DEFAULT_DATA.states.infuraDB);
-
+export default function SolidityContractProvider({ addElectoralResultInCache, addWalletInCache, deleteWalletCached, children }: IProps) {
 	const contract = useMemo(() => {
 		const PROVIDER = ethers.providers.InfuraProvider.getWebSocketProvider({ chainId: 5, name: 'goerli' });
 		const PRIVATE_WALLET = new ethers.Wallet(`${process.env.REACT_APP_WALLET_PRIVATE_KEY}`, PROVIDER);
@@ -73,21 +63,26 @@ export default function SolidityContractProvider({ children }: { children: React
 						.promise(
 							window.ethereum.request({ method: 'eth_requestAccounts' }),
 							{
-								pending: 'Requesting Wallet Connection...',
-								success: 'Success, Wallet Connected!',
+								pending: 'Waiting for connection to wallet...',
 								error: 'Oops, You canceled or have other connection with your wallet!',
 							},
 							{ toastId: TOAST_ID }
 						)
 						.then(accounts => {
-							const ACCOUNT_LOGGED = (accounts as string[])[0];
-							useStorageDBHook.updateMetaMaskStorageData(ACCOUNT_LOGGED);
+							const ACCOUNT_LOGGED = (accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData;
+
+							if (ACCOUNT_LOGGED) {
+								addWalletInCache(ACCOUNT_LOGGED);
+							} else {
+								deleteWalletCached();
+							}
+
 							resolve(ACCOUNT_LOGGED || null);
 						})
 						.catch((error: DOMException) => reject(error));
 				}
 			}),
-		[useStorageDBHook]
+		[addWalletInCache, deleteWalletCached]
 	);
 
 	const logout = useCallback(
@@ -96,15 +91,14 @@ export default function SolidityContractProvider({ children }: { children: React
 				const TOAST_ID = 'logout';
 
 				try {
-					useStorageDBHook.remove('@metamask');
-					toast('Wallet disconnected successfully!', { toastId: TOAST_ID, type: 'success' });
+					deleteWalletCached();
 					resolve();
 				} catch (error) {
 					toast('Oops... There was a problem disconnecting the wallet!', { toastId: TOAST_ID, type: 'error' });
 					reject(error);
 				}
 			}),
-		[useStorageDBHook]
+		[deleteWalletCached]
 	);
 
 	const getElectoralResult = useCallback(async (): Promise<TypeInfuraData> => {
@@ -129,7 +123,7 @@ export default function SolidityContractProvider({ children }: { children: React
 				},
 			};
 
-			useStorageDBHook.updateInfuraStorageData(CONVERTED_DATA);
+			addElectoralResultInCache(CONVERTED_DATA);
 
 			return CONVERTED_DATA;
 		} catch (error) {
@@ -137,36 +131,18 @@ export default function SolidityContractProvider({ children }: { children: React
 			toast(ERROR_MESSAGE, { toastId: 'loading-candidates', type: 'error' });
 			throw new Error(ERROR_MESSAGE);
 		}
-	}, [contract, useStorageDBHook]);
+	}, [contract, addElectoralResultInCache]);
 
 	const value: IContextData = useMemo(
 		() => ({
-			states: {
-				isLoadingDB,
-				metamaskDB,
-				infuraDB,
-			},
 			actions: {
 				connect,
 				logout,
 				getElectoralResult,
 			},
 		}),
-		[isLoadingDB, metamaskDB, infuraDB, connect, logout, getElectoralResult]
+		[connect, logout, getElectoralResult]
 	);
-
-	useEffect(() => {
-		useStorageDBHook
-			.connect()
-			.then(({ infuraData, metamaskData }) => {
-				setInfuraDB(infuraData);
-				setMetamaskDB(metamaskData);
-			})
-			.catch(() => {
-				toast('Oops... There was a problem loading the database, please try again!', { toastId: 'loading-database', type: 'error' });
-			})
-			.finally(() => setIsLoadingDB(false));
-	}, [useStorageDBHook]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }

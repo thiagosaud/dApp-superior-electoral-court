@@ -1,18 +1,36 @@
-import { memo, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Suspense, lazy, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { chain } from 'mathjs';
 import PageTemplate from 'templates/TemplatePage';
 import VotingStatisticList from 'components/Lists/VotingStatisticList';
-import CandidateList from 'components/Lists/CandidateList';
 import CandidateListSkeleton from 'components/Skeletons/CandidateListSkeleton';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
-import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDB';
+import { useStorageDBProvider } from 'providers/useStorageDBProvider';
+import { TypeInfuraStorageData, TypeInfuraData, TypeMetaMaskStorageData, TypeStorageKey } from 'hooks/useStorageDB';
+
+const LazyAbstainVoteButton = lazy(() =>
+	Promise.all([
+		import(/* webpackChunkName: "AbstainVoteButton" */ 'components/Buttons/AbstainVoteButton'),
+		new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
+
+const LazyCandidateList = lazy(() =>
+	Promise.all([
+		import(/* webpackChunkName: "CandidateList" */ 'components/Lists/CandidateList'),
+		new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
 
 function HomePage() {
-	const { actions, states } = useSolidityContractProvider();
-	const [isLoadingElectoralResult, updateIsLoadingElectoralResult] = useReducer(state => !state, true);
-	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(null);
+	const useStorageDBProviderHook = useStorageDBProvider();
+	const useSolidityContractProviderHook = useSolidityContractProvider();
+	const [walletConnected, setWalletConnected] = useState<TypeMetaMaskStorageData>(useStorageDBProviderHook.dataCached.metamask);
+	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(useStorageDBProviderHook.dataCached.infura);
 
 	const votes = useMemo(() => {
 		const TOTAL_CONFIRMED_VOTES = electoralResult?.totalConfirmedVotes || 0;
@@ -31,35 +49,21 @@ function HomePage() {
 		};
 	}, [electoralResult]);
 
-	const hasVoted = useMemo(() => {
-		if (electoralResult) {
+	const isDisabledVoteButton = useMemo(() => {
+		if (electoralResult && walletConnected) {
 			const { abstentionVotes, confirmedVotes } = electoralResult;
-			const ELECTOR_ABSTENTION_VOTE = abstentionVotes.elector.find(wallet => wallet === states.metamaskDB);
-			const ELECTOR_CONFIRMED_VOTE = confirmedVotes.find(({ elector }) => elector.find(wallet => wallet === states.metamaskDB));
+			const ELECTOR_ABSTENTION_VOTE = abstentionVotes.elector.find(wallet => wallet === walletConnected);
+			const ELECTOR_CONFIRMED_VOTE = confirmedVotes.find(({ elector }) => elector.find(wallet => wallet === walletConnected));
 
 			return !!(ELECTOR_ABSTENTION_VOTE || ELECTOR_CONFIRMED_VOTE);
 		}
 
-		return false;
-	}, [electoralResult, states]);
-
-	const showSkeleton = useMemo(() => {
-		if ((states.isLoadingDB || isLoadingElectoralResult) && !electoralResult) {
-			return true;
-		}
-
-		if (!states.isLoadingDB && !isLoadingElectoralResult && electoralResult) {
-			return false;
-		}
-
-		return true;
-	}, [states, isLoadingElectoralResult, electoralResult]);
+		return !walletConnected;
+	}, [walletConnected, electoralResult]);
 
 	const getCandidateList = useCallback(
 		({ confirmedVotes, totalConfirmedVotes }: TypeInfuraData) =>
 			confirmedVotes.map(({ candidate, vote }) => ({
-				// eslint-disable-next-line no-console
-				onConfirmVote: (number: number) => console.log(number),
 				number: candidate,
 				votesConfirmed: {
 					total: vote.total,
@@ -70,39 +74,56 @@ function HomePage() {
 	);
 
 	const cacheData = useCallback(() => {
-		if (!states.isLoadingDB && states.infuraDB) {
-			setElectoralResult(states.infuraDB);
-			updateIsLoadingElectoralResult();
+		if (!electoralResult) {
+			useSolidityContractProviderHook.actions.getElectoralResult().then(response => setElectoralResult(response));
 		}
+	}, [electoralResult, useSolidityContractProviderHook]);
 
-		if (!states.isLoadingDB && !states.infuraDB) {
-			actions.getElectoralResult().then(data => {
-				setElectoralResult(data);
-				updateIsLoadingElectoralResult();
-			});
+	const handleOnAbstainVote = useCallback(() => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+	}, []);
+
+	const handleOnConfirmVote = useCallback(() => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+	}, []);
+
+	const handleOnChangeMetaMaskDB = useCallback(({ key, newValue }: { key: string | null; newValue: TypeMetaMaskStorageData }) => {
+		if (key) {
+			const STORAGE_KEY = key as TypeStorageKey;
+
+			if (STORAGE_KEY === '@metamask') {
+				setWalletConnected(newValue as TypeMetaMaskStorageData);
+			}
 		}
-	}, [actions, states]);
+	}, []);
 
-	useEffect(() => cacheData(), [cacheData]);
+	useEffect(() => {
+		cacheData();
+
+		window.onstorage = ({ key, newValue }) => handleOnChangeMetaMaskDB({ key, newValue });
+
+		return () => {
+			window.onstorage = null;
+		};
+	}, [cacheData, handleOnChangeMetaMaskDB]);
 
 	return (
 		<PageTemplate>
-			<VotingStatisticList isLoading={isLoadingElectoralResult} votes={votes} />
+			<VotingStatisticList isLoading={!votes} votes={votes} />
 
 			<div className='mt-4 mb-3 d-flex justify-content-between align-items-center'>
 				<h5 className='mb-0'>President</h5>
 
-				{showSkeleton ? (
-					<GenericSkeleton height='38px' width='172px' />
-				) : (
-					<Button variant='light' disabled={hasVoted}>
-						Abstain from Voting
-					</Button>
-				)}
+				<Suspense fallback={<GenericSkeleton height='38px' width='172px' />}>
+					<LazyAbstainVoteButton onAbstainVote={handleOnAbstainVote} isDisabled={isDisabledVoteButton} />
+				</Suspense>
 			</div>
 
-			{showSkeleton && !electoralResult && <CandidateListSkeleton />}
-			{electoralResult && <CandidateList data={getCandidateList(electoralResult)} hasVoted={hasVoted} />}
+			{electoralResult && (
+				<Suspense fallback={<CandidateListSkeleton />}>
+					<LazyCandidateList onConfirmVote={handleOnConfirmVote} data={getCandidateList(electoralResult)} hasVoted={isDisabledVoteButton} />
+				</Suspense>
+			)}
 		</PageTemplate>
 	);
 }
