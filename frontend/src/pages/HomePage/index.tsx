@@ -102,7 +102,9 @@ function HomePage() {
 				</Suspense>
 			</div>
 
-			{electoralResult && (
+			{!electoralResult ? (
+				<CandidateListSkeleton />
+			) : (
 				<Suspense fallback={<CandidateListSkeleton />}>
 					<LazyCandidateList onConfirmVote={handleOnConfirmVote} data={getCandidateList(electoralResult)} hasVoted={isDisabledVoteButton} />
 				</Suspense>
