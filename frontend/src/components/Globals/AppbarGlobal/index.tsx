@@ -1,28 +1,11 @@
-import { Suspense, lazy, useCallback, useEffect, useReducer, useState } from 'react';
+import { Suspense, useCallback, useEffect, useReducer, useState } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Utils/Logotype';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
+import { LazyConnectWalletButton, LazyConnectedWalletButton } from 'utils/LazyLoadingComponents';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { useStorageDBProvider } from 'providers/useStorageDBProvider';
 import { TypeMetaMaskStorageData } from 'hooks/useStorageDB';
-
-const LazyConnectWalletButton = lazy(() =>
-	Promise.all([
-		import(/* webpackChunkName: "ConnectedWalletButton" */ 'components/Buttons/ConnectWalletButton'),
-		new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		}),
-	]).then(([moduleExports]) => moduleExports)
-);
-
-const LazyConnectedWalletButton = lazy(() =>
-	Promise.all([
-		import(/* webpackChunkName: "ConnectedWalletButton" */ 'components/Buttons/ConnectedWalletButton'),
-		new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		}),
-	]).then(([moduleExports]) => moduleExports)
-);
 
 export default function AppbarGlobal() {
 	const useSolidityContractProviderHook = useSolidityContractProvider();

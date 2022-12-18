@@ -1,30 +1,13 @@
-import { Suspense, lazy, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { chain } from 'mathjs';
 import PageTemplate from 'templates/TemplatePage';
 import VotingStatisticList from 'components/Lists/VotingStatisticList';
 import CandidateListSkeleton from 'components/Skeletons/CandidateListSkeleton';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
+import { LazyAbstainVoteButton, LazyCandidateList } from 'utils/LazyLoadingComponents';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { useStorageDBProvider } from 'providers/useStorageDBProvider';
 import { TypeInfuraStorageData, TypeInfuraData, TypeMetaMaskStorageData, TypeStorageKey } from 'hooks/useStorageDB';
-
-const LazyAbstainVoteButton = lazy(() =>
-	Promise.all([
-		import(/* webpackChunkName: "AbstainVoteButton" */ 'components/Buttons/AbstainVoteButton'),
-		new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		}),
-	]).then(([moduleExports]) => moduleExports)
-);
-
-const LazyCandidateList = lazy(() =>
-	Promise.all([
-		import(/* webpackChunkName: "CandidateList" */ 'components/Lists/CandidateList'),
-		new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		}),
-	]).then(([moduleExports]) => moduleExports)
-);
 
 function HomePage() {
 	const useStorageDBProviderHook = useStorageDBProvider();
