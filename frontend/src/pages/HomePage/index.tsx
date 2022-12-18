@@ -7,12 +7,11 @@ import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyAbstainVoteButton, LazyCandidateList } from 'utils/LazyLoadingComponents';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { useStorageDBProvider } from 'providers/useStorageDBProvider';
-import { TypeInfuraStorageData, TypeInfuraData, TypeMetaMaskStorageData, TypeStorageKey } from 'hooks/useStorageDB';
+import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDB';
 
 function HomePage() {
 	const useStorageDBProviderHook = useStorageDBProvider();
 	const useSolidityContractProviderHook = useSolidityContractProvider();
-	const [walletConnected, setWalletConnected] = useState<TypeMetaMaskStorageData>(useStorageDBProviderHook.dataCached.metamask);
 	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(useStorageDBProviderHook.dataCached.infura);
 
 	const votes = useMemo(() => {
@@ -33,16 +32,18 @@ function HomePage() {
 	}, [electoralResult]);
 
 	const isDisabledVoteButton = useMemo(() => {
-		if (electoralResult && walletConnected) {
+		const WALLET_CONNECTED = useStorageDBProviderHook.dataCached.metamask;
+
+		if (electoralResult && WALLET_CONNECTED) {
 			const { abstentionVotes, confirmedVotes } = electoralResult;
-			const ELECTOR_ABSTENTION_VOTE = abstentionVotes.elector.find(wallet => wallet === walletConnected);
-			const ELECTOR_CONFIRMED_VOTE = confirmedVotes.find(({ elector }) => elector.find(wallet => wallet === walletConnected));
+			const ELECTOR_ABSTENTION_VOTE = abstentionVotes.elector.find(wallet => wallet === WALLET_CONNECTED);
+			const ELECTOR_CONFIRMED_VOTE = confirmedVotes.find(({ elector }) => elector.find(wallet => wallet === WALLET_CONNECTED));
 
 			return !!(ELECTOR_ABSTENTION_VOTE || ELECTOR_CONFIRMED_VOTE);
 		}
 
-		return !walletConnected;
-	}, [walletConnected, electoralResult]);
+		return !WALLET_CONNECTED;
+	}, [useStorageDBProviderHook, electoralResult]);
 
 	const getCandidateList = useCallback(
 		({ confirmedVotes, totalConfirmedVotes }: TypeInfuraData) =>
@@ -70,25 +71,7 @@ function HomePage() {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 	}, []);
 
-	const handleOnChangeMetaMaskDB = useCallback(({ key, newValue }: { key: string | null; newValue: TypeMetaMaskStorageData }) => {
-		if (key) {
-			const STORAGE_KEY = key as TypeStorageKey;
-
-			if (STORAGE_KEY === '@metamask') {
-				setWalletConnected(newValue as TypeMetaMaskStorageData);
-			}
-		}
-	}, []);
-
-	useEffect(() => {
-		cacheData();
-
-		window.onstorage = ({ key, newValue }) => handleOnChangeMetaMaskDB({ key, newValue });
-
-		return () => {
-			window.onstorage = null;
-		};
-	}, [cacheData, handleOnChangeMetaMaskDB]);
+	useEffect(() => cacheData(), [cacheData]);
 
 	return (
 		<PageTemplate>

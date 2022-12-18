@@ -1,44 +1,30 @@
-import { Suspense, useCallback, useEffect, useReducer, useState } from 'react';
+import { Suspense, useCallback, useMemo, useReducer } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Utils/Logotype';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyConnectWalletButton, LazyConnectedWalletButton } from 'utils/LazyLoadingComponents';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { useStorageDBProvider } from 'providers/useStorageDBProvider';
-import { TypeMetaMaskStorageData } from 'hooks/useStorageDB';
 
 export default function AppbarGlobal() {
 	const useSolidityContractProviderHook = useSolidityContractProvider();
 	const useStorageDBProviderHook = useStorageDBProvider();
-	const [isConnectingWallet, updateIsConnectingWallet] = useReducer(state => !state, false);
-	const [isDisconnectingWallet, updateIsDisconnectingWallet] = useReducer(state => !state, false);
-	const [walletConnected, setWalletConnected] = useState<TypeMetaMaskStorageData>(null);
+	const [isConnectingWallet, updateIsConnectingWallet] = useReducer((state: boolean) => !state, false);
+	const [isDisconnectingWallet, updateIsDisconnectingWallet] = useReducer((state: boolean) => !state, false);
+
+	const walletConnected = useMemo(() => useStorageDBProviderHook.dataCached.metamask, [useStorageDBProviderHook]);
 
 	const handleOnConnectWallet = useCallback(() => {
 		updateIsConnectingWallet();
 
-		useSolidityContractProviderHook.actions
-			.connect()
-			.then(wallet => setWalletConnected(wallet))
-			.finally(() => updateIsConnectingWallet());
+		useSolidityContractProviderHook.actions.connect().finally(() => updateIsConnectingWallet());
 	}, [useSolidityContractProviderHook]);
 
 	const handleOnDisconnecWallet = useCallback(() => {
 		updateIsDisconnectingWallet();
 
-		useSolidityContractProviderHook.actions
-			.logout()
-			.then(() => setWalletConnected(null))
-			.finally(() => updateIsDisconnectingWallet());
+		useSolidityContractProviderHook.actions.logout().finally(() => updateIsDisconnectingWallet());
 	}, [useSolidityContractProviderHook]);
-
-	const cacheData = useCallback(() => {
-		if (useStorageDBProviderHook.dataCached.metamask) {
-			setWalletConnected(useStorageDBProviderHook.dataCached.metamask);
-		}
-	}, [useStorageDBProviderHook]);
-
-	useEffect(() => cacheData(), [cacheData]);
 
 	return (
 		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>

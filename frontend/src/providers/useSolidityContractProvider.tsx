@@ -4,10 +4,10 @@ import { ethers } from 'ethers';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import BallotContract from 'contract/Ballot.json';
 import { IContractGetResult } from 'contract/Interfaces';
-import { IStorageDBProviderActions } from 'providers/useStorageDBProvider';
+import { IStorageDBProvider } from 'providers/useStorageDBProvider';
 import { TypeInfuraData, TypeInfuraStorageData, TypeMetaMaskData, TypeMetaMaskStorageData } from 'hooks/useStorageDB';
 
-interface IProps extends IStorageDBProviderActions {
+interface IProps extends IStorageDBProvider {
 	children: ReactNode;
 }
 
@@ -30,7 +30,10 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 
 const CONTEXT = createContext<IContextData>(CONTEXT_DEFAULT_DATA);
 
-export default function SolidityContractProvider({ addElectoralResultInCache, addWalletInCache, deleteWalletCached, children }: IProps) {
+export default function SolidityContractProvider({
+	actions: { addElectoralResultInCache, addWalletInCache, deleteWalletCached },
+	children,
+}: IProps) {
 	const contract = useMemo(() => {
 		const PROVIDER = ethers.providers.InfuraProvider.getWebSocketProvider({ chainId: 5, name: 'goerli' });
 		const PRIVATE_WALLET = new ethers.Wallet(`${process.env.REACT_APP_WALLET_PRIVATE_KEY}`, PROVIDER);
