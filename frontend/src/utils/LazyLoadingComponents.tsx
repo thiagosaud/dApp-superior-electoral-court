@@ -37,3 +37,21 @@ export const LazyCandidateList = lazy(() =>
 		}),
 	]).then(([moduleExports]) => moduleExports)
 );
+
+export const LazyVoteProgressBarUtil = lazy(() =>
+	Promise.all([
+		import(/* webpackChunkName: "VoteProgressBarUtil" */ 'components/Utils/VoteProgressBarUtil'),
+		new Promise(resolve => {
+			setTimeout(resolve, ONE_SECOND);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
+
+export const LazyVoteProgressTitleUtil = lazy(() =>
+	Promise.all([
+		import(/* webpackChunkName: "VoteProgressTitleUtil" */ 'components/Utils/VoteProgressTitleUtil'),
+		new Promise(resolve => {
+			setTimeout(resolve, ONE_SECOND);
+		}),
+	]).then(([moduleExports]) => moduleExports)
+);
