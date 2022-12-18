@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useMemo } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -146,6 +146,21 @@ export default function SolidityContractProvider({
 		}),
 		[connect, logout, getElectoralResult]
 	);
+
+	useEffect(() => {
+		window.ethereum?.on('accountsChanged', accounts => addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData));
+		window.ethereum?.on('chainChanged', chainID => {
+			const IS_GOERLI_NETWORK = (chainID as string) === '0x5';
+
+			if (!IS_GOERLI_NETWORK) {
+				toast('Attention, only use the GOERLI network!', { toastId: 'chain-changed', type: 'warning' });
+			}
+		});
+
+		return () => {
+			window.ethereum?.removeAllListeners();
+		};
+	}, [addWalletInCache]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }
