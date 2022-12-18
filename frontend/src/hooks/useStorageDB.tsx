@@ -19,8 +19,6 @@ interface IUseStorageDB {
 }
 
 export default function useStorageDB(): IUseStorageDB {
-	const storage = useCallback((key: TypeStorageKey) => (key === '@infura-provider' ? localStorage : sessionStorage), []);
-
 	const dispatchStorageEvent = useCallback((key: TypeStorageKey, value: TypeInfuraStorageData | TypeMetaMaskStorageData) => {
 		let newValue: string | null = null;
 
@@ -44,7 +42,7 @@ export default function useStorageDB(): IUseStorageDB {
 		(key: TypeStorageKey) =>
 			new Promise<TypeInfuraStorageData | TypeMetaMaskStorageData>((resolve, reject) => {
 				try {
-					const STORAGE_DATA = storage(key).getItem(key);
+					const STORAGE_DATA = localStorage.getItem(key);
 
 					if (key === '@metamask') {
 						resolve(STORAGE_DATA as TypeMetaMaskStorageData);
@@ -57,7 +55,7 @@ export default function useStorageDB(): IUseStorageDB {
 					reject(error);
 				}
 			}),
-		[storage]
+		[]
 	);
 
 	const connect = useCallback(
@@ -80,24 +78,24 @@ export default function useStorageDB(): IUseStorageDB {
 	const update = useCallback(
 		(key: TypeStorageKey, newData: TypeInfuraData | TypeMetaMaskData) => {
 			if (key === '@metamask') {
-				storage(key).setItem(key, newData as TypeMetaMaskData);
+				localStorage.setItem(key, newData as TypeMetaMaskData);
 			}
 
 			if (key === '@infura-provider') {
-				storage(key).setItem(key, JSON.stringify(newData as TypeInfuraData));
+				localStorage.setItem(key, JSON.stringify(newData as TypeInfuraData));
 			}
 
 			dispatchStorageEvent(key, newData);
 		},
-		[storage, dispatchStorageEvent]
+		[dispatchStorageEvent]
 	);
 
 	const remove = useCallback(
 		(key: TypeStorageKey) => {
-			storage(key).removeItem(key);
+			localStorage.removeItem(key);
 			dispatchStorageEvent(key, null);
 		},
-		[storage, dispatchStorageEvent]
+		[dispatchStorageEvent]
 	);
 
 	return {
