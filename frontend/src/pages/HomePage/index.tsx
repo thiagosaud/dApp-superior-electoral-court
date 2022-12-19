@@ -7,7 +7,7 @@ import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyAbstainVoteButton, LazyCandidateList } from 'utils/LazyLoadingComponents';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
-import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDB';
+import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDBHook';
 
 function HomePage() {
 	const useStorageDBProvider = useStorageDBProviderHook();

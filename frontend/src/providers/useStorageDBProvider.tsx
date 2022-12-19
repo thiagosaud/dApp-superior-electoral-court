@@ -1,12 +1,12 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import useStorageDB, {
+import useStorageDBHook, {
 	TypeInfuraData,
 	TypeInfuraStorageData,
 	TypeMetaMaskData,
 	TypeMetaMaskStorageData,
 	TypeStorageKey,
-} from 'hooks/useStorageDB';
+} from 'hooks/useStorageDBHook';
 
 interface IContextData {
 	healthCheck: {
@@ -44,7 +44,7 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 const CONTEXT = createContext<IContextData>(CONTEXT_DEFAULT_DATA);
 
 export default function StorageDBProvider({ children }: { children: ReactNode }) {
-	const { connect, update, remove } = useStorageDB();
+	const { connect, update, remove } = useStorageDBHook();
 	const [isLoading, updateIsLoading] = useState(CONTEXT_DEFAULT_DATA.healthCheck.isLoading);
 	const [infuraData, updateInfuraData] = useState<TypeInfuraStorageData>(CONTEXT_DEFAULT_DATA.dataCached.infura);
 	const [metamaskData, updateMetaMaskData] = useState<TypeMetaMaskStorageData>(CONTEXT_DEFAULT_DATA.dataCached.metamask);

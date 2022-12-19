@@ -18,7 +18,7 @@ interface IUseStorageDB {
 	remove: (key: TypeStorageKey) => void;
 }
 
-export default function useStorageDB(): IUseStorageDB {
+export default function useStorageDBHook(): IUseStorageDB {
 	const dispatchStorageEvent = useCallback((key: TypeStorageKey, value: TypeInfuraStorageData | TypeMetaMaskStorageData) => {
 		let newValue: string | null = null;
 

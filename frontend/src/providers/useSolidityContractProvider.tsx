@@ -2,7 +2,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo }
 import { toast } from 'react-toastify';
 import { IContractGetResult } from 'contract/Interfaces';
 import useEthersHook from 'hooks/useEthersHook';
-import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDB';
+import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDBHook';
 import { useStorageDBProviderHook } from './useStorageDBProvider';
 
 interface IContextData {
