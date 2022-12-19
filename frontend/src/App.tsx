@@ -3,8 +3,8 @@ import Router from 'Router';
 import { ToastContainer } from 'react-toastify';
 import { createGlobalStyle } from 'styled-components';
 import LoadingTemplate from 'templates/LoadingTemplate';
+import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import SolidityContractProvider from 'providers/useSolidityContractProvider';
-import { useStorageDBProvider } from 'providers/useStorageDBProvider';
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -16,17 +16,10 @@ const GlobalStyle = createGlobalStyle`
 function App() {
 	const {
 		healthCheck: { isLoading },
-		actions: { addElectoralResultInCache, addWalletInCache, deleteWalletCached },
-	} = useStorageDBProvider();
+	} = useStorageDBProviderHook();
 
 	return (
-		<SolidityContractProvider
-			actions={{
-				addElectoralResultInCache,
-				addWalletInCache,
-				deleteWalletCached,
-			}}
-		>
+		<SolidityContractProvider>
 			<GlobalStyle />
 
 			{isLoading ? <LoadingTemplate /> : <Router />}
