@@ -20,8 +20,8 @@ const Wrapper = styled.div`
 	}
 `;
 
-function Loading() {
+function LoadingUtil() {
 	return <Wrapper />;
 }
 
-export default Loading;
+export default LoadingUtil;
