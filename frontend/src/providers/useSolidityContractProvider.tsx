@@ -1,13 +1,9 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { IContractGetResult } from 'contract/Interfaces';
-import { IStorageDBProvider } from 'providers/useStorageDBProvider';
 import useEthersHook from 'hooks/useEthersHook';
 import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDB';
-
-interface IProps extends IStorageDBProvider {
-	children: ReactNode;
-}
+import { useStorageDBProviderHook } from './useStorageDBProvider';
 
 interface IContextData {
 	actions: {
@@ -34,11 +30,9 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 
 const CONTEXT = createContext<IContextData>(CONTEXT_DEFAULT_DATA);
 
-export default function SolidityContractProvider({
-	actions: { addElectoralResultInCache, addWalletInCache, deleteWalletCached },
-	children,
-}: IProps) {
+export default function SolidityContractProvider({ children }: { children: ReactNode }) {
 	const useEthers = useEthersHook();
+	const useStorageDBProvider = useStorageDBProviderHook();
 
 	const connect = useCallback(
 		() =>
@@ -55,27 +49,27 @@ export default function SolidityContractProvider({
 							{ toastId: 'connect', pauseOnFocusLoss: false }
 						)
 						.then(({ wallet }) => {
-							addWalletInCache(wallet);
+							useStorageDBProvider.actions.addWalletInCache(wallet);
 							resolve();
 						})
 						.catch(() => reject());
 				}
 			}),
-		[useEthers, addWalletInCache]
+		[useEthers, useStorageDBProvider]
 	);
 
 	const logout = useCallback(
 		(): Promise<void> =>
 			new Promise((resolve, reject) => {
 				try {
-					deleteWalletCached();
+					useStorageDBProvider.actions.deleteWalletCached();
 					resolve();
 				} catch (error) {
 					toast('Oops... There was a problem disconnecting the wallet!', { toastId: 'logout', type: 'error' });
 					reject(error);
 				}
 			}),
-		[deleteWalletCached]
+		[useStorageDBProvider]
 	);
 
 	const getElectoralResult = useCallback(async (): Promise<TypeInfuraData> => {
@@ -101,14 +95,14 @@ export default function SolidityContractProvider({
 				},
 			};
 
-			addElectoralResultInCache(CONVERTED_DATA);
+			useStorageDBProvider.actions.addElectoralResultInCache(CONVERTED_DATA);
 
 			return CONVERTED_DATA;
 		} catch (error) {
 			toast('Oops... There was an error loading the candidates, please try again!', { toastId: 'get-electoral-result', type: 'error' });
 			throw new Error();
 		}
-	}, [useEthers, addElectoralResultInCache]);
+	}, [useEthers, useStorageDBProvider]);
 
 	const value: IContextData = useMemo(
 		() => ({
@@ -123,7 +117,7 @@ export default function SolidityContractProvider({
 
 	useEffect(() => {
 		useEthers.states.ethereum?.on(useEthers.events.changed.accounts, accounts =>
-			addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData)
+			useStorageDBProvider.actions.addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData)
 		);
 
 		useEthers.states.ethereum?.on(useEthers.events.changed.chain, chainID => {
@@ -135,7 +129,7 @@ export default function SolidityContractProvider({
 		return () => {
 			useEthers.states.ethereum?.removeAllListeners();
 		};
-	}, [useEthers, addWalletInCache]);
+	}, [useEthers, useStorageDBProvider]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }

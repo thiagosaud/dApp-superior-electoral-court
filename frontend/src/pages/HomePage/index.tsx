@@ -6,13 +6,13 @@ import CandidateListSkeleton from 'components/Skeletons/CandidateListSkeleton';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyAbstainVoteButton, LazyCandidateList } from 'utils/LazyLoadingComponents';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
-import { useStorageDBProvider } from 'providers/useStorageDBProvider';
+import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDB';
 
 function HomePage() {
-	const useStorageDBProviderHook = useStorageDBProvider();
+	const useStorageDBProvider = useStorageDBProviderHook();
 	const useSolidityContractProviderHook = useSolidityContractProvider();
-	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(useStorageDBProviderHook.dataCached.infura);
+	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(useStorageDBProvider.dataCached.infura);
 
 	const votes = useMemo(() => {
 		const TOTAL_CONFIRMED_VOTES = electoralResult?.totalConfirmedVotes || 0;
@@ -32,7 +32,7 @@ function HomePage() {
 	}, [electoralResult]);
 
 	const isDisabledVoteButton = useMemo(() => {
-		const WALLET_CONNECTED = useStorageDBProviderHook.dataCached.metamask;
+		const WALLET_CONNECTED = useStorageDBProvider.dataCached.metamask;
 
 		if (electoralResult && WALLET_CONNECTED) {
 			const { abstentionVotes, confirmedVotes } = electoralResult;
@@ -43,7 +43,7 @@ function HomePage() {
 		}
 
 		return !WALLET_CONNECTED;
-	}, [useStorageDBProviderHook, electoralResult]);
+	}, [useStorageDBProvider, electoralResult]);
 
 	const getCandidateList = useCallback(
 		({ confirmedVotes, totalConfirmedVotes }: TypeInfuraData) =>

@@ -3,16 +3,16 @@ import { Container, Navbar } from 'react-bootstrap';
 import Logotype from 'components/Utils/Logotype';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyConnectWalletButton, LazyConnectedWalletButton } from 'utils/LazyLoadingComponents';
+import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
-import { useStorageDBProvider } from 'providers/useStorageDBProvider';
 
 export default function AppbarGlobal() {
 	const useSolidityContractProviderHook = useSolidityContractProvider();
-	const useStorageDBProviderHook = useStorageDBProvider();
+	const useStorageDBProvider = useStorageDBProviderHook();
 	const [isConnectingWallet, updateIsConnectingWallet] = useReducer((state: boolean) => !state, false);
 	const [isDisconnectingWallet, updateIsDisconnectingWallet] = useReducer((state: boolean) => !state, false);
 
-	const walletConnected = useMemo(() => useStorageDBProviderHook.dataCached.metamask, [useStorageDBProviderHook]);
+	const walletConnected = useMemo(() => useStorageDBProvider.dataCached.metamask, [useStorageDBProvider]);
 
 	const handleOnConnectWallet = useCallback(() => {
 		updateIsConnectingWallet();

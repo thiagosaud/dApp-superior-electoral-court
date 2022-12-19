@@ -8,21 +8,18 @@ import useStorageDB, {
 	TypeStorageKey,
 } from 'hooks/useStorageDB';
 
-export interface IStorageDBProvider {
-	actions: {
-		addWalletInCache: (wallet: TypeMetaMaskData) => void;
-		addElectoralResultInCache: (result: TypeInfuraData) => void;
-		deleteWalletCached: () => void;
-	};
-}
-
-interface IContextData extends Pick<IStorageDBProvider, 'actions'> {
+interface IContextData {
 	healthCheck: {
 		isLoading: boolean;
 	};
 	dataCached: {
 		infura: TypeInfuraStorageData;
 		metamask: TypeMetaMaskStorageData;
+	};
+	actions: {
+		addWalletInCache: (wallet: TypeMetaMaskData) => void;
+		addElectoralResultInCache: (result: TypeInfuraData) => void;
+		deleteWalletCached: () => void;
 	};
 }
 
@@ -106,11 +103,11 @@ export default function StorageDBProvider({ children }: { children: ReactNode })
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }
 
-export const useStorageDBProvider = () => {
+export const useStorageDBProviderHook = () => {
 	const CONTEXT_HOOK = useContext(CONTEXT);
 
 	if (!CONTEXT_HOOK) {
-		throw new Error('useStorageDBProvider must be used within an StorageDBProvider.');
+		throw new Error('useStorageDBProviderHook must be used within an StorageDBProvider.');
 	}
 
 	return CONTEXT_HOOK;
