@@ -1,11 +1,9 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
-import { ethers } from 'ethers';
-import MetaMaskOnboarding from '@metamask/onboarding';
-import BallotContract from 'contract/Ballot.json';
 import { IContractGetResult } from 'contract/Interfaces';
 import { IStorageDBProvider } from 'providers/useStorageDBProvider';
-import { TypeInfuraData, TypeInfuraStorageData, TypeMetaMaskData, TypeMetaMaskStorageData } from 'hooks/useStorageDB';
+import useEthersHook from 'hooks/useEthersHook';
+import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDB';
 
 interface IProps extends IStorageDBProvider {
 	children: ReactNode;
@@ -13,9 +11,9 @@ interface IProps extends IStorageDBProvider {
 
 interface IContextData {
 	actions: {
-		connect: () => Promise<TypeMetaMaskStorageData>;
+		connect: () => Promise<void>;
 		logout: () => Promise<void>;
-		getElectoralResult: () => Promise<TypeInfuraStorageData>;
+		getElectoralResult: () => Promise<TypeInfuraData>;
 	};
 }
 
@@ -23,8 +21,14 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 	actions: {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		logout: async (): Promise<void> => {},
-		connect: async (): Promise<TypeMetaMaskStorageData> => null,
-		getElectoralResult: async (): Promise<TypeInfuraStorageData> => null,
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		connect: async (): Promise<void> => {},
+		getElectoralResult: async (): Promise<TypeInfuraData> => ({
+			candidates: [],
+			totalConfirmedVotes: 0,
+			confirmedVotes: [{ candidate: 0, elector: [], vote: { total: 0 } }],
+			abstentionVotes: { elector: [], vote: { total: 0 } },
+		}),
 	},
 };
 
@@ -34,70 +38,40 @@ export default function SolidityContractProvider({
 	actions: { addElectoralResultInCache, addWalletInCache, deleteWalletCached },
 	children,
 }: IProps) {
-	const contract = useMemo(() => {
-		const PROVIDER = ethers.providers.InfuraProvider.getWebSocketProvider({ chainId: 5, name: 'goerli' });
-		const PRIVATE_WALLET = new ethers.Wallet(`${process.env.REACT_APP_WALLET_PRIVATE_KEY}`, PROVIDER);
-		const CONTRACT = new ethers.Contract(process.env.REACT_APP_SOLIDITY_CONTRACT_ADDRESS || '', BallotContract.abi, PRIVATE_WALLET);
-
-		return CONTRACT;
-	}, []);
+	const useEthers = useEthersHook();
 
 	const connect = useCallback(
 		() =>
-			new Promise<TypeMetaMaskStorageData>((resolve, reject) => {
-				const TOAST_ID = 'eth_requestAccounts';
-
-				if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-					const METAMASK_ONBOARDING = new MetaMaskOnboarding();
-
-					toast('You dont have the metamask installed, click here to be redirected!', {
-						onClick: () => METAMASK_ONBOARDING.startOnboarding(),
-						onClose: () => METAMASK_ONBOARDING.stopOnboarding(),
-						toastId: TOAST_ID,
-						type: 'info',
-						closeButton: false,
-					});
-
-					reject(new Error('You dont have the metamask installed, click here to be redirected!'));
-				}
-
-				if (MetaMaskOnboarding.isMetaMaskInstalled() && window.ethereum) {
+			new Promise<void>((resolve, reject) => {
+				if (useEthers.actions.verifyMetaMaskExtension()) {
 					toast
 						.promise(
-							window.ethereum.request({ method: 'eth_requestAccounts' }),
+							useEthers.actions.connect(),
 							{
 								pending: 'Waiting for connection to wallet...',
+								success: 'Successfully connected!',
 								error: 'Oops, You canceled or have other connection with your wallet!',
 							},
-							{ toastId: TOAST_ID }
+							{ toastId: 'connect', pauseOnFocusLoss: false }
 						)
-						.then(accounts => {
-							const ACCOUNT_LOGGED = (accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData;
-
-							if (ACCOUNT_LOGGED) {
-								addWalletInCache(ACCOUNT_LOGGED);
-							} else {
-								deleteWalletCached();
-							}
-
-							resolve(ACCOUNT_LOGGED || null);
+						.then(({ wallet }) => {
+							addWalletInCache(wallet);
+							resolve();
 						})
-						.catch((error: DOMException) => reject(error));
+						.catch(() => reject());
 				}
 			}),
-		[addWalletInCache, deleteWalletCached]
+		[useEthers, addWalletInCache]
 	);
 
 	const logout = useCallback(
 		(): Promise<void> =>
 			new Promise((resolve, reject) => {
-				const TOAST_ID = 'logout';
-
 				try {
 					deleteWalletCached();
 					resolve();
 				} catch (error) {
-					toast('Oops... There was a problem disconnecting the wallet!', { toastId: TOAST_ID, type: 'error' });
+					toast('Oops... There was a problem disconnecting the wallet!', { toastId: 'logout', type: 'error' });
 					reject(error);
 				}
 			}),
@@ -106,7 +80,8 @@ export default function SolidityContractProvider({
 
 	const getElectoralResult = useCallback(async (): Promise<TypeInfuraData> => {
 		try {
-			const { candidates, totalConfirmedVotes, abstentionVotes, confirmedVotes }: IContractGetResult = await contract.getResult();
+			const { candidates, totalConfirmedVotes, abstentionVotes, confirmedVotes }: IContractGetResult =
+				await useEthers.states.infura.contract.getResult();
 
 			const CONVERTED_DATA: TypeInfuraData = {
 				totalConfirmedVotes: Number(totalConfirmedVotes._hex),
@@ -130,11 +105,10 @@ export default function SolidityContractProvider({
 
 			return CONVERTED_DATA;
 		} catch (error) {
-			const ERROR_MESSAGE = 'Oops... There was an error loading the candidates, please try again!';
-			toast(ERROR_MESSAGE, { toastId: 'loading-candidates', type: 'error' });
-			throw new Error(ERROR_MESSAGE);
+			toast('Oops... There was an error loading the candidates, please try again!', { toastId: 'get-electoral-result', type: 'error' });
+			throw new Error();
 		}
-	}, [contract, addElectoralResultInCache]);
+	}, [useEthers, addElectoralResultInCache]);
 
 	const value: IContextData = useMemo(
 		() => ({
@@ -148,19 +122,20 @@ export default function SolidityContractProvider({
 	);
 
 	useEffect(() => {
-		window.ethereum?.on('accountsChanged', accounts => addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData));
-		window.ethereum?.on('chainChanged', chainID => {
-			const IS_GOERLI_NETWORK = (chainID as string) === '0x5';
+		useEthers.states.ethereum?.on(useEthers.events.changed.accounts, accounts =>
+			addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData)
+		);
 
-			if (!IS_GOERLI_NETWORK) {
-				toast('Attention, only use the GOERLI network!', { toastId: 'chain-changed', type: 'warning' });
+		useEthers.states.ethereum?.on(useEthers.events.changed.chain, chainID => {
+			if (!useEthers.actions.isGoerliNetwork(chainID as string)) {
+				toast('Attention, only use the GOERLI network!', { toastId: useEthers.events.changed.chain, type: 'warning' });
 			}
 		});
 
 		return () => {
-			window.ethereum?.removeAllListeners();
+			useEthers.states.ethereum?.removeAllListeners();
 		};
-	}, [addWalletInCache]);
+	}, [useEthers, addWalletInCache]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }
