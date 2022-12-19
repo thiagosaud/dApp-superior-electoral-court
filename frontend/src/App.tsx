@@ -31,7 +31,17 @@ function App() {
 
 			{isLoading ? <LoadingTemplate /> : <Router />}
 
-			<ToastContainer theme='light' position='top-right' rtl={false} draggable pauseOnFocusLoss pauseOnHover closeOnClick />
+			<ToastContainer
+				theme='light'
+				position='top-right'
+				rtl={false}
+				limit={5}
+				newestOnTop
+				draggable
+				pauseOnFocusLoss
+				pauseOnHover
+				closeOnClick
+			/>
 		</SolidityContractProvider>
 	);
 }
