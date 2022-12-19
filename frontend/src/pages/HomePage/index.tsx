@@ -1,6 +1,6 @@
 import { Suspense, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { chain } from 'mathjs';
-import PageTemplate from 'templates/TemplatePage';
+import PageTemplate from 'templates/PageTemplate';
 import VotingStatisticList from 'components/Lists/VotingStatisticList';
 import CandidateListSkeleton from 'components/Skeletons/CandidateListSkeleton';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
