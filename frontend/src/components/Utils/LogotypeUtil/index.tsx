@@ -14,6 +14,6 @@ const Image = styled.img.attrs({
 	${({ size }) => size === 'md' && { width: '120px', height: '120px' }}
 `;
 
-export default function Logotype({ size }: IProps) {
+export default function LogotypeUtil({ size }: IProps) {
 	return <Image size={size} />;
 }

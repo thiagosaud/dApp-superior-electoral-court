@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap';
-import Logotype from 'components/Utils/Logotype';
+import LogotypeUtil from 'components/Utils/LogotypeUtil';
 import LoadingUtil from 'components/Utils/LoadingUtil';
 import FooterbarGlobal from 'components/Globals/FooterbarGlobal';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ export default function LoadingTemplate() {
 	return (
 		<Wrapper>
 			<WrapperLogotype>
-				<Logotype size='md' />
+				<LogotypeUtil size='md' />
 			</WrapperLogotype>
 
 			<LoadingUtil />

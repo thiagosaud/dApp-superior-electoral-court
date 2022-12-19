@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useMemo, useReducer } from 'react';
 import { Container, Navbar } from 'react-bootstrap';
-import Logotype from 'components/Utils/Logotype';
+import LogotypeUtil from 'components/Utils/LogotypeUtil';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyConnectWalletButton, LazyConnectedWalletButton } from 'utils/LazyLoadingComponents';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
@@ -30,7 +30,7 @@ export default function AppbarGlobal() {
 		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>
 			<Container>
 				<Navbar.Brand className='d-flex gap-2 align-items-center'>
-					<Logotype size='xs' />
+					<LogotypeUtil size='xs' />
 					<Navbar.Collapse>dApp - Superior Electoral Court</Navbar.Collapse>
 				</Navbar.Brand>
 
