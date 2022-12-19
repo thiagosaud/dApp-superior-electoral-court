@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { Badge, Button, ListGroup } from 'react-bootstrap';
 import { MathJsChain } from 'mathjs';
-import Avatar from 'components/Utils/Avatar';
+import AvatarUtil from 'components/Utils/AvatarUtil';
 import VoteProgressTitleUtil from 'components/Utils/VoteProgressTitleUtil';
 
 interface IProps {
@@ -31,7 +31,7 @@ function CandidateList({ onConfirmVote, hasVoted, data }: IProps) {
 				<ListGroup.Item key={`${number}`} as='li' className='d-flex flex-wrap gap-2 align-items-center'>
 					<div className='d-flex justify-content-between align-items-center w-100'>
 						<div className='d-flex flex-wrap align-items-center gap-2'>
-							<Avatar alt={`Candidate #${getCandidateID(number)}`} src={getAvatarSRC(number)} />
+							<AvatarUtil alt={`Candidate #${getCandidateID(number)}`} src={getAvatarSRC(number)} />
 							<h5 className='fw-bold mb-0'>#{getCandidateID(number)}</h5>
 						</div>
 

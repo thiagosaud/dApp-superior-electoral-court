@@ -17,8 +17,8 @@ interface IProps {
 	alt: string;
 }
 
-function Avatar({ src, alt }: IProps) {
+function AvatarUtil({ src, alt }: IProps) {
 	return <Image src={src || SkeletonSRC} alt={alt} />;
 }
 
-export default Avatar;
+export default AvatarUtil;
