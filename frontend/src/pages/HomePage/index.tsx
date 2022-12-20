@@ -22,11 +22,17 @@ function HomePage() {
 		return {
 			confirmed: {
 				total: TOTAL_CONFIRMED_VOTES,
-				totalPercentage: chain(TOTAL_CONFIRMED_VOTES).divide(TOTAL_VOTES).multiply(100),
+				totalPercentage:
+					chain(TOTAL_CONFIRMED_VOTES).isZero() || chain(TOTAL_VOTES).isZero()
+						? chain(0)
+						: chain(TOTAL_CONFIRMED_VOTES).divide(TOTAL_VOTES).multiply(100),
 			},
 			abstention: {
 				total: TOTAL_ABSTENTION_VOTES,
-				totalPercentage: chain(TOTAL_ABSTENTION_VOTES).divide(TOTAL_VOTES).multiply(100),
+				totalPercentage:
+					chain(TOTAL_ABSTENTION_VOTES).isZero() || chain(TOTAL_VOTES).isZero()
+						? chain(0)
+						: chain(TOTAL_ABSTENTION_VOTES).divide(TOTAL_VOTES).multiply(100),
 			},
 		};
 	}, [electoralResult]);
@@ -52,7 +58,10 @@ function HomePage() {
 				number: candidate,
 				votesConfirmed: {
 					total: totalVotes,
-					totalPercentage: chain(totalVotes).divide(totalConfirmedVotes).multiply(100),
+					totalPercentage:
+						chain(totalVotes).isZero() || chain(totalConfirmedVotes).isZero()
+							? chain(0)
+							: chain(totalVotes).divide(totalConfirmedVotes).multiply(100),
 				},
 			})),
 		[]
