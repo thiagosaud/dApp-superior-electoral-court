@@ -1,6 +1,5 @@
 import { memo, useCallback } from 'react';
 import { Badge, Button, ListGroup } from 'react-bootstrap';
-import { MathJsChain } from 'mathjs';
 import AvatarUtil from 'components/Utils/AvatarUtil';
 import VoteProgressTitleUtil from 'components/Utils/VoteProgressTitleUtil';
 
@@ -11,7 +10,7 @@ interface IProps {
 		number: number;
 		votesConfirmed: {
 			total: number;
-			totalPercentage: MathJsChain<number>;
+			totalPercentage: number;
 		};
 	}[];
 }
@@ -39,7 +38,7 @@ function CandidateList({ onConfirmVote, hasVoted, data }: IProps) {
 							<span className='mb-1'>Votes:</span>
 
 							<Badge bg='primary' pill style={{ width: '155px' }} data-testid='badge-vote-value-component'>
-								<VoteProgressTitleUtil total={votesConfirmed.total} percentage={votesConfirmed.totalPercentage.done()} />
+								<VoteProgressTitleUtil total={votesConfirmed.total} percentage={votesConfirmed.totalPercentage} />
 							</Badge>
 						</div>
 					</div>

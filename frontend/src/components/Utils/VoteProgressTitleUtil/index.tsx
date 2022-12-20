@@ -1,8 +1,8 @@
 import { memo } from 'react';
 
 interface IProps {
-	total: number;
-	percentage: number;
+	total: number | string;
+	percentage: number | string;
 }
 
 function VoteProgressTitleUtil({ total, percentage }: IProps) {

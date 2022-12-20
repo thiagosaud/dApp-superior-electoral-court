@@ -1,6 +1,5 @@
 import { Suspense, memo, useCallback } from 'react';
 import { Badge, ListGroup } from 'react-bootstrap';
-import { MathJsChain } from 'mathjs';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyVoteProgressTitleUtil, LazyVoteProgressBarUtil } from 'utils/LazyLoadingComponents';
 
@@ -9,24 +8,24 @@ interface IProps {
 	votes: {
 		confirmed: {
 			total: number;
-			totalPercentage: MathJsChain<number>;
+			totalPercentage: number;
 		};
 		abstention: {
 			total: number;
-			totalPercentage: MathJsChain<number>;
+			totalPercentage: number;
 		};
 	};
 }
 
 function VotingStatisticList({ isLoading, votes: { confirmed, abstention } }: IProps) {
 	const VoteCount = useCallback(
-		({ title, total, percentage }: { title: 'Confirmed' | 'Abstention'; total: number; percentage: MathJsChain<number> }) => (
+		({ title, total, percentage }: { title: 'Confirmed' | 'Abstention'; total: number; percentage: number }) => (
 			<div className='d-flex  gap-2'>
 				<Badge bg={title === 'Confirmed' ? 'success' : 'secondary'}>{title}</Badge>
 
 				{!isLoading && (
 					<Suspense fallback={<GenericSkeleton height='20px' width={title === 'Confirmed' ? '66px' : '48px'} />}>
-						<LazyVoteProgressTitleUtil total={total} percentage={percentage.done()} />
+						<LazyVoteProgressTitleUtil total={total} percentage={percentage} />
 					</Suspense>
 				)}
 			</div>
@@ -47,8 +46,8 @@ function VotingStatisticList({ isLoading, votes: { confirmed, abstention } }: IP
 				<Suspense fallback={<GenericSkeleton height='16px' width='100%' />}>
 					<LazyVoteProgressBarUtil
 						votes={{
-							confirmed: confirmed.totalPercentage.done(),
-							abstention: abstention.totalPercentage.done(),
+							confirmed: confirmed.totalPercentage,
+							abstention: abstention.totalPercentage,
 						}}
 					/>
 				</Suspense>

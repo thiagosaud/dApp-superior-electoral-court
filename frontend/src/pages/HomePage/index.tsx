@@ -1,5 +1,4 @@
 import { Suspense, memo, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import { chain } from 'mathjs';
 import PageTemplate from 'templates/PageTemplate';
 import VotingStatisticList from 'components/Lists/VotingStatisticList';
 import CandidateListSkeleton from 'components/Skeletons/CandidateListSkeleton';
@@ -8,35 +7,31 @@ import { LazyAbstainVoteButton, LazyCandidateList } from 'utils/LazyLoadingCompo
 import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDBHook';
+import useCalculatorHook from 'hooks/useCalculatorHook';
 
 function HomePage() {
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const useSolidityContractProviderHook = useSolidityContractProvider();
+	const useCalculator = useCalculatorHook();
 	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(null);
 	const [isVoting, updateIsVoting] = useReducer((state: boolean) => !state, false);
 
 	const votes = useMemo(() => {
 		const TOTAL_CONFIRMED_VOTES = electoralResult?.totalConfirmedVotes || 0;
 		const TOTAL_ABSTENTION_VOTES = electoralResult?.abstentionVotes.totalVotes || 0;
-		const TOTAL_VOTES = chain([TOTAL_CONFIRMED_VOTES, TOTAL_ABSTENTION_VOTES]).sum().done();
+		const TOTAL_VOTES = useCalculator.sum([TOTAL_CONFIRMED_VOTES, TOTAL_ABSTENTION_VOTES]);
 
 		return {
 			confirmed: {
 				total: TOTAL_CONFIRMED_VOTES,
-				totalPercentage:
-					chain(TOTAL_CONFIRMED_VOTES).isZero() || chain(TOTAL_VOTES).isZero()
-						? chain(0)
-						: chain(TOTAL_CONFIRMED_VOTES).divide(TOTAL_VOTES).multiply(100),
+				totalPercentage: useCalculator.toPercentage(TOTAL_CONFIRMED_VOTES, TOTAL_VOTES),
 			},
 			abstention: {
 				total: TOTAL_ABSTENTION_VOTES,
-				totalPercentage:
-					chain(TOTAL_ABSTENTION_VOTES).isZero() || chain(TOTAL_VOTES).isZero()
-						? chain(0)
-						: chain(TOTAL_ABSTENTION_VOTES).divide(TOTAL_VOTES).multiply(100),
+				totalPercentage: useCalculator.toPercentage(TOTAL_ABSTENTION_VOTES, TOTAL_VOTES),
 			},
 		};
-	}, [electoralResult]);
+	}, [useCalculator, electoralResult]);
 
 	const isDisabledVoteButton = useMemo(() => {
 		const WALLET_CONNECTED = useStorageDBProvider.dataCached.metamask;
@@ -59,13 +54,10 @@ function HomePage() {
 				number: candidate,
 				votesConfirmed: {
 					total: totalVotes,
-					totalPercentage:
-						chain(totalVotes).isZero() || chain(totalConfirmedVotes).isZero()
-							? chain(0)
-							: chain(totalVotes).divide(totalConfirmedVotes).multiply(100),
+					totalPercentage: useCalculator.toPercentage(totalVotes, totalConfirmedVotes),
 				},
 			})),
-		[]
+		[useCalculator]
 	);
 
 	const cacheData = useCallback(() => {
