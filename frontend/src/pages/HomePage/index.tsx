@@ -37,9 +37,11 @@ function HomePage() {
 		const WALLET_CONNECTED = useStorageDBProvider.dataCached.metamask;
 
 		if (electoralResult && WALLET_CONNECTED) {
-			const ELECTOR_ABSTENTION_VOTE = electoralResult.abstentionVotes.electors.find(wallet => wallet === WALLET_CONNECTED);
+			const compare = (electorWallet: string, walletConnected: string) => electorWallet.toUpperCase() === walletConnected.toUpperCase();
+
+			const ELECTOR_ABSTENTION_VOTE = electoralResult.abstentionVotes.electors.find(wallet => compare(wallet, WALLET_CONNECTED));
 			const ELECTOR_CONFIRMED_VOTE = electoralResult.confirmedVotes.find(({ electors }) =>
-				electors.find(wallet => wallet === WALLET_CONNECTED)
+				electors.find(wallet => compare(wallet, WALLET_CONNECTED))
 			);
 
 			return !!(ELECTOR_ABSTENTION_VOTE || ELECTOR_CONFIRMED_VOTE);
