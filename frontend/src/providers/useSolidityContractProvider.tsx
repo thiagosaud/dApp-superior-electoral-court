@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
-import { IBallotContractGetResult } from 'contract/Interfaces';
+import { IBallotContractGetResult, IBallotContractGetResultConverted } from 'contract/Interfaces';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDBHook';
 import useEthersHook from 'hooks/useEthersHook';
@@ -78,33 +78,41 @@ export default function SolidityContractProvider({ children }: { children: React
 		[useStorageDBProvider]
 	);
 
+	const getElectoralResultConverted = useCallback(
+		({
+			candidates,
+			totalConfirmedVotes,
+			abstentionVotes,
+			confirmedVotes,
+		}: IBallotContractGetResult): IBallotContractGetResultConverted => ({
+			totalConfirmedVotes: Number(totalConfirmedVotes._hex),
+			candidates: candidates.map(({ _hex }) => Number(_hex)),
+			confirmedVotes: confirmedVotes.map(({ candidate, electors, totalVotes }) => ({
+				electors,
+				candidate: Number(candidate._hex),
+				totalVotes: Number(totalVotes._hex),
+			})),
+			abstentionVotes: {
+				electors: abstentionVotes.electors,
+				totalVotes: Number(abstentionVotes.totalVotes._hex),
+			},
+		}),
+		[]
+	);
+
 	const getElectoralResult = useCallback(async (): Promise<TypeInfuraData> => {
 		try {
-			const { candidates, totalConfirmedVotes, abstentionVotes, confirmedVotes }: IBallotContractGetResult =
-				await useEthers.states.contract.infura.getResult();
+			const DATA: IBallotContractGetResult = await useEthers.states.contract.infura.getResult();
+			const DATA_CONVERTED = getElectoralResultConverted(DATA);
 
-			const CONVERTED_DATA: TypeInfuraData = {
-				totalConfirmedVotes: Number(totalConfirmedVotes._hex),
-				candidates: candidates.map(({ _hex }) => Number(_hex)),
-				confirmedVotes: confirmedVotes.map(({ candidate, electors, totalVotes }) => ({
-					electors,
-					candidate: Number(candidate._hex),
-					totalVotes: Number(totalVotes._hex),
-				})),
-				abstentionVotes: {
-					electors: abstentionVotes.electors,
-					totalVotes: Number(abstentionVotes.totalVotes._hex),
-				},
-			};
+			useStorageDBProvider.actions.addElectoralResultInCache(DATA_CONVERTED);
 
-			useStorageDBProvider.actions.addElectoralResultInCache(CONVERTED_DATA);
-
-			return CONVERTED_DATA;
+			return DATA_CONVERTED;
 		} catch (error) {
 			toast('Oops... There was an error loading the candidates, please try again!', { toastId: 'get-electoral-result', type: 'error' });
 			throw new Error();
 		}
-	}, [useEthers, useStorageDBProvider]);
+	}, [useEthers, useStorageDBProvider, getElectoralResultConverted]);
 
 	const confirmVote = useCallback(
 		async (candidateID: number) => {
@@ -189,10 +197,15 @@ export default function SolidityContractProvider({ children }: { children: React
 			}
 		});
 
+		useEthers.states.contract.web3.on('LogElectorVote', (_, electoralResult: IBallotContractGetResult) => {
+			const DATA_CONVERTED = getElectoralResultConverted(electoralResult);
+			useStorageDBProvider.actions.addElectoralResultInCache(DATA_CONVERTED);
+		});
+
 		return () => {
 			useEthers.states.provider.ethereum?.removeAllListeners();
 		};
-	}, [useEthers, useStorageDBProvider]);
+	}, [useEthers, useStorageDBProvider, getElectoralResultConverted]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }

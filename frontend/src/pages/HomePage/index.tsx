@@ -69,10 +69,12 @@ function HomePage() {
 	);
 
 	const cacheData = useCallback(() => {
+		setElectoralResult(useStorageDBProvider.dataCached.infura);
+
 		if (!electoralResult) {
 			useSolidityContractProviderHook.actions.getElectoralResult().then(response => setElectoralResult(response));
 		}
-	}, [electoralResult, useSolidityContractProviderHook]);
+	}, [electoralResult, useStorageDBProvider, useSolidityContractProviderHook]);
 
 	const handleOnAbstainVote = useCallback(() => {
 		updateIsVoting();

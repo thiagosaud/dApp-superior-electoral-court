@@ -86,6 +86,11 @@ export default function StorageDBProvider({ children }: { children: ReactNode })
 						if (STORAGE_KEY === '@metamask') {
 							updateMetaMaskData(newValue as TypeMetaMaskStorageData);
 						}
+
+						if (STORAGE_KEY === '@infura-provider') {
+							const STORAGE_DATA = newValue ? (JSON.parse(newValue) as TypeInfuraStorageData) : null;
+							updateInfuraData(STORAGE_DATA);
+						}
 					}
 				};
 			})
