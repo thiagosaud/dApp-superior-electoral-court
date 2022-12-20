@@ -4,10 +4,10 @@ import LogotypeUtil from 'components/Utils/LogotypeUtil';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyConnectWalletButton, LazyConnectedWalletButton } from 'utils/LazyLoadingComponents';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
-import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
+import { useSolidityContractProviderHook } from 'providers/useSolidityContractProvider';
 
 export default function AppbarGlobal() {
-	const useSolidityContractProviderHook = useSolidityContractProvider();
+	const useSolidityContractProvider = useSolidityContractProviderHook();
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const [isConnectingWallet, updateIsConnectingWallet] = useReducer((state: boolean) => !state, false);
 	const [isDisconnectingWallet, updateIsDisconnectingWallet] = useReducer((state: boolean) => !state, false);
@@ -17,14 +17,14 @@ export default function AppbarGlobal() {
 	const handleOnConnectWallet = useCallback(() => {
 		updateIsConnectingWallet();
 
-		useSolidityContractProviderHook.actions.connect().finally(() => updateIsConnectingWallet());
-	}, [useSolidityContractProviderHook]);
+		useSolidityContractProvider.actions.connect().finally(() => updateIsConnectingWallet());
+	}, [useSolidityContractProvider]);
 
 	const handleOnDisconnecWallet = useCallback(() => {
 		updateIsDisconnectingWallet();
 
-		useSolidityContractProviderHook.actions.logout().finally(() => updateIsDisconnectingWallet());
-	}, [useSolidityContractProviderHook]);
+		useSolidityContractProvider.actions.logout().finally(() => updateIsDisconnectingWallet());
+	}, [useSolidityContractProvider]);
 
 	return (
 		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>

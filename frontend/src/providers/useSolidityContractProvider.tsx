@@ -210,7 +210,7 @@ export default function SolidityContractProvider({ children }: { children: React
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }
 
-export const useSolidityContractProvider = () => {
+export const useSolidityContractProviderHook = () => {
 	const CONTEXT_HOOK = useContext(CONTEXT);
 
 	if (!CONTEXT_HOOK) {

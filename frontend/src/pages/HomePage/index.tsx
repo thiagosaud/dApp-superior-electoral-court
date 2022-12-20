@@ -4,14 +4,14 @@ import VotingStatisticList from 'components/Lists/VotingStatisticList';
 import CandidateListSkeleton from 'components/Skeletons/CandidateListSkeleton';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyAbstainVoteButton, LazyCandidateList } from 'utils/LazyLoadingComponents';
-import { useSolidityContractProvider } from 'providers/useSolidityContractProvider';
+import { useSolidityContractProviderHook } from 'providers/useSolidityContractProvider';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDBHook';
 import useCalculatorHook from 'hooks/useCalculatorHook';
 
 function HomePage() {
 	const useStorageDBProvider = useStorageDBProviderHook();
-	const useSolidityContractProviderHook = useSolidityContractProvider();
+	const useSolidityContractProvider = useSolidityContractProviderHook();
 	const useCalculator = useCalculatorHook();
 	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(null);
 	const [isVoting, updateIsVoting] = useReducer((state: boolean) => !state, false);
@@ -64,21 +64,21 @@ function HomePage() {
 		setElectoralResult(useStorageDBProvider.dataCached.infura);
 
 		if (!electoralResult) {
-			useSolidityContractProviderHook.actions.getElectoralResult().then(response => setElectoralResult(response));
+			useSolidityContractProvider.actions.getElectoralResult().then(response => setElectoralResult(response));
 		}
-	}, [electoralResult, useStorageDBProvider, useSolidityContractProviderHook]);
+	}, [electoralResult, useStorageDBProvider, useSolidityContractProvider]);
 
 	const handleOnAbstainVote = useCallback(() => {
 		updateIsVoting();
-		useSolidityContractProviderHook.actions.abstainVote().finally(() => updateIsVoting());
-	}, [useSolidityContractProviderHook]);
+		useSolidityContractProvider.actions.abstainVote().finally(() => updateIsVoting());
+	}, [useSolidityContractProvider]);
 
 	const handleOnConfirmVote = useCallback(
 		(candidateID: number) => {
 			updateIsVoting();
-			useSolidityContractProviderHook.actions.confirmVote(candidateID).finally(() => updateIsVoting());
+			useSolidityContractProvider.actions.confirmVote(candidateID).finally(() => updateIsVoting());
 		},
-		[useSolidityContractProviderHook]
+		[useSolidityContractProvider]
 	);
 
 	useEffect(() => cacheData(), [cacheData]);
