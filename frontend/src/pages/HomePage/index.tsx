@@ -1,4 +1,4 @@
-import { Suspense, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, memo, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { chain } from 'mathjs';
 import PageTemplate from 'templates/PageTemplate';
 import VotingStatisticList from 'components/Lists/VotingStatisticList';
@@ -13,6 +13,7 @@ function HomePage() {
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const useSolidityContractProviderHook = useSolidityContractProvider();
 	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(null);
+	const [isVoting, updateIsVoting] = useReducer((state: boolean) => !state, false);
 
 	const votes = useMemo(() => {
 		const TOTAL_CONFIRMED_VOTES = electoralResult?.totalConfirmedVotes || 0;
@@ -74,12 +75,17 @@ function HomePage() {
 	}, [electoralResult, useSolidityContractProviderHook]);
 
 	const handleOnAbstainVote = useCallback(() => {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-	}, []);
+		updateIsVoting();
+		useSolidityContractProviderHook.actions.abstainVote().finally(() => updateIsVoting());
+	}, [useSolidityContractProviderHook]);
 
-	const handleOnConfirmVote = useCallback(() => {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-	}, []);
+	const handleOnConfirmVote = useCallback(
+		(candidateID: number) => {
+			updateIsVoting();
+			useSolidityContractProviderHook.actions.confirmVote(candidateID).finally(() => updateIsVoting());
+		},
+		[useSolidityContractProviderHook]
+	);
 
 	useEffect(() => cacheData(), [cacheData]);
 
@@ -91,7 +97,7 @@ function HomePage() {
 				<h5 className='mb-0'>President</h5>
 
 				<Suspense fallback={<GenericSkeleton height='38px' width='172px' />}>
-					<LazyAbstainVoteButton onAbstainVote={handleOnAbstainVote} isDisabled={isDisabledVoteButton} />
+					<LazyAbstainVoteButton onAbstainVote={handleOnAbstainVote} isDisabled={isDisabledVoteButton || isVoting} />
 				</Suspense>
 			</div>
 
@@ -99,7 +105,11 @@ function HomePage() {
 				<CandidateListSkeleton />
 			) : (
 				<Suspense fallback={<CandidateListSkeleton />}>
-					<LazyCandidateList onConfirmVote={handleOnConfirmVote} data={getCandidateList(electoralResult)} hasVoted={isDisabledVoteButton} />
+					<LazyCandidateList
+						onConfirmVote={handleOnConfirmVote}
+						data={getCandidateList(electoralResult)}
+						hasVoted={isDisabledVoteButton || isVoting}
+					/>
 				</Suspense>
 			)}
 		</PageTemplate>

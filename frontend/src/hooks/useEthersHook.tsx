@@ -5,10 +5,7 @@ import { ExternalProvider } from '@ethersproject/providers';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import BallotContract from 'contract/Ballot.json';
-
-interface IConnectFunction {
-	wallet: string;
-}
+import { TypeBallotContractFunctionFragment, TypeBallotContractFunctionFragmentParams } from 'contract/Interfaces';
 
 interface IUseEthersHook {
 	events: {
@@ -30,7 +27,12 @@ interface IUseEthersHook {
 	actions: {
 		isGoerliNetwork: (chainID: string) => boolean;
 		hasMetaMaskInstalled: () => boolean;
-		connect: () => Promise<IConnectFunction>;
+		connect: () => Promise<{ wallet: string }>;
+		sendTransaction: (
+			estimateGas: string,
+			functionFragment: TypeBallotContractFunctionFragment,
+			functionFragmentParams?: TypeBallotContractFunctionFragmentParams
+		) => Promise<ethers.providers.TransactionReceipt>;
 	};
 }
 
@@ -78,7 +80,7 @@ export default function useEthersHook(): IUseEthersHook {
 
 	const connect = useCallback(
 		() =>
-			new Promise<IConnectFunction>((resolve, reject) => {
+			new Promise<{ wallet: string }>((resolve, reject) => {
 				if (!provider.ethereum) {
 					reject(new Error('Ethereum Provider does not exist!'));
 				}
@@ -89,6 +91,45 @@ export default function useEthersHook(): IUseEthersHook {
 					.catch(error => reject(error));
 			}),
 		[provider]
+	);
+
+	const sendTransaction = useCallback(
+		(
+			estimateGas: string,
+			functionFragment: TypeBallotContractFunctionFragment,
+			functionFragmentParams?: TypeBallotContractFunctionFragmentParams
+		) =>
+			new Promise<ethers.providers.TransactionReceipt>((resolve, reject) => {
+				connect()
+					.then(async ({ wallet }) => {
+						try {
+							const TRANSACTION = await provider.ethereum.request({
+								method: 'eth_sendTransaction',
+								params: [
+									{
+										from: wallet,
+										to: process.env.REACT_APP_SOLIDITY_CONTRACT_ADDRESS,
+										gas: estimateGas,
+										value: 0,
+										data: new ethers.utils.Interface(BallotContract.abi).encodeFunctionData(functionFragment, functionFragmentParams || []),
+									},
+								],
+							});
+
+							const TRANSACTION_RECEIPT = await provider.web3.waitForTransaction(TRANSACTION as string);
+
+							if (TRANSACTION_RECEIPT.status === 0) {
+								reject();
+							}
+
+							resolve(TRANSACTION_RECEIPT);
+						} catch (error) {
+							reject(error);
+						}
+					})
+					.catch((error: DOMException) => reject(error));
+			}),
+		[provider, connect]
 	);
 
 	return {
@@ -103,6 +144,7 @@ export default function useEthersHook(): IUseEthersHook {
 			isGoerliNetwork,
 			hasMetaMaskInstalled,
 			connect,
+			sendTransaction,
 		},
 	};
 }

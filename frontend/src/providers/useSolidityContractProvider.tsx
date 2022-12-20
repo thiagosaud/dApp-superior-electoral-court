@@ -7,8 +7,10 @@ import useEthersHook from 'hooks/useEthersHook';
 
 interface IContextData {
 	actions: {
-		connect: () => Promise<void>;
 		logout: () => Promise<void>;
+		connect: () => Promise<void>;
+		confirmVote: (candidateID: number) => Promise<void>;
+		abstainVote: () => Promise<void>;
 		getElectoralResult: () => Promise<TypeInfuraData>;
 	};
 }
@@ -19,6 +21,10 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 		logout: async (): Promise<void> => {},
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		connect: async (): Promise<void> => {},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		confirmVote: async (): Promise<void> => {},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		abstainVote: async (): Promise<void> => {},
 		getElectoralResult: async (): Promise<TypeInfuraData> => ({
 			candidates: [],
 			totalConfirmedVotes: 0,
@@ -100,15 +106,76 @@ export default function SolidityContractProvider({ children }: { children: React
 		}
 	}, [useEthers, useStorageDBProvider]);
 
+	const confirmVote = useCallback(
+		async (candidateID: number) => {
+			try {
+				const CONTRACT_SIGNER = useEthers.states.contract.web3.connect(useEthers.states.provider.web3.getSigner());
+
+				const ESTIMAGE_GAS = await toast.promise(
+					CONTRACT_SIGNER.estimateGas.confirmVote(candidateID),
+					{
+						pending: 'Estimating the Gas...',
+						success: 'Gas estimated successfully!',
+						error: 'Oops... There was a problem estimating gas, or you already voted!',
+					},
+					{ toastId: 'confirm-vote-estimate-gas', pauseOnFocusLoss: false }
+				);
+
+				await toast.promise(
+					useEthers.actions.sendTransaction(ESTIMAGE_GAS._hex, 'confirmVote', [candidateID]),
+					{
+						pending: 'Computing votes on the Blockchain...',
+						success: 'Vote computed successfully!',
+						error: 'Oops... There was a problem computing the vote!',
+					},
+					{ toastId: 'confirm-vote-send-transaction', pauseOnFocusLoss: false }
+				);
+			} catch (error) {
+				throw new Error();
+			}
+		},
+		[useEthers]
+	);
+
+	const abstainVote = useCallback(async () => {
+		try {
+			const CONTRACT_SIGNER = useEthers.states.contract.web3.connect(useEthers.states.provider.web3.getSigner());
+
+			const ESTIMAGE_GAS = await toast.promise(
+				CONTRACT_SIGNER.estimateGas.abstainVote(),
+				{
+					pending: 'Estimating the Gas...',
+					success: 'Gas estimated successfully!',
+					error: 'Oops... There was a problem estimating gas, or you already voted!',
+				},
+				{ toastId: 'confirm-vote-estimate-gas', pauseOnFocusLoss: false }
+			);
+
+			await toast.promise(
+				useEthers.actions.sendTransaction(ESTIMAGE_GAS._hex, 'abstainVote', []),
+				{
+					pending: 'Computing votes on the Blockchain...',
+					success: 'Vote computed successfully!',
+					error: 'Oops... There was a problem computing the vote!',
+				},
+				{ toastId: 'confirm-vote-send-transaction', pauseOnFocusLoss: false }
+			);
+		} catch (error) {
+			throw new Error();
+		}
+	}, [useEthers]);
+
 	const value: IContextData = useMemo(
 		() => ({
 			actions: {
 				connect,
 				logout,
+				confirmVote,
+				abstainVote,
 				getElectoralResult,
 			},
 		}),
-		[connect, logout, getElectoralResult]
+		[connect, logout, confirmVote, abstainVote, getElectoralResult]
 	);
 
 	useEffect(() => {
