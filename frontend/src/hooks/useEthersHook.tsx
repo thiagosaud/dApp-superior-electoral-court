@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
+import { ExternalProvider } from '@ethersproject/providers';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import BallotContract from 'contract/Ballot.json';
@@ -17,32 +18,36 @@ interface IUseEthersHook {
 		};
 	};
 	states: {
-		ethereum: MetaMaskInpageProvider | undefined;
-		infura: {
-			privateWallet: ethers.Wallet;
-			contract: ethers.Contract;
+		provider: {
+			ethereum: MetaMaskInpageProvider | undefined;
+			web3: ethers.providers.Web3Provider;
+		};
+		contract: {
+			web3: ethers.Contract;
+			infura: ethers.Contract;
 		};
 	};
 	actions: {
-		verifyMetaMaskExtension: () => boolean;
-		connect: () => Promise<IConnectFunction>;
 		isGoerliNetwork: (chainID: string) => boolean;
+		hasMetaMaskInstalled: () => boolean;
+		connect: () => Promise<IConnectFunction>;
 	};
 }
 
 export default function useEthersHook(): IUseEthersHook {
 	const provider = useMemo(
 		() => ({
-			ethereum: window.ethereum,
+			ethereum: window.ethereum as MetaMaskInpageProvider,
+			web3: new ethers.providers.Web3Provider(window.ethereum as ExternalProvider),
 			infura: ethers.providers.InfuraProvider.getWebSocketProvider({ chainId: 5, name: 'goerli' }),
 		}),
 		[]
 	);
 
-	const infura = useMemo(
+	const contract = useMemo(
 		() => ({
-			privateWallet: new ethers.Wallet(process.env.REACT_APP_WALLET_PRIVATE_KEY || '', provider.infura),
-			contract: new ethers.Contract(
+			web3: new ethers.Contract(process.env.REACT_APP_SOLIDITY_CONTRACT_ADDRESS || '', BallotContract.abi, provider.web3),
+			infura: new ethers.Contract(
 				process.env.REACT_APP_SOLIDITY_CONTRACT_ADDRESS || '',
 				BallotContract.abi,
 				new ethers.Wallet(process.env.REACT_APP_WALLET_PRIVATE_KEY || '', provider.infura)
@@ -53,7 +58,7 @@ export default function useEthersHook(): IUseEthersHook {
 
 	const isGoerliNetwork = useCallback((chainID: string) => chainID === '0x5', []);
 
-	const verifyMetaMaskExtension = useCallback(() => {
+	const hasMetaMaskInstalled = useCallback(() => {
 		if (MetaMaskOnboarding.isMetaMaskInstalled()) {
 			return true;
 		}
@@ -73,9 +78,9 @@ export default function useEthersHook(): IUseEthersHook {
 
 	const connect = useCallback(
 		() =>
-			new Promise<{ wallet: string }>((resolve, reject) => {
+			new Promise<IConnectFunction>((resolve, reject) => {
 				if (!provider.ethereum) {
-					reject();
+					reject(new Error('Ethereum Provider does not exist!'));
 				}
 
 				provider.ethereum
@@ -93,14 +98,11 @@ export default function useEthersHook(): IUseEthersHook {
 				chain: 'chainChanged',
 			},
 		},
-		states: {
-			ethereum: provider.ethereum,
-			infura,
-		},
+		states: { provider, contract },
 		actions: {
-			verifyMetaMaskExtension,
-			connect,
 			isGoerliNetwork,
+			hasMetaMaskInstalled,
+			connect,
 		},
 	};
 }

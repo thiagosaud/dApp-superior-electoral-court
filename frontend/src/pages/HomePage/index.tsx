@@ -12,11 +12,11 @@ import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDBHook';
 function HomePage() {
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const useSolidityContractProviderHook = useSolidityContractProvider();
-	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(useStorageDBProvider.dataCached.infura);
+	const [electoralResult, setElectoralResult] = useState<TypeInfuraStorageData>(null);
 
 	const votes = useMemo(() => {
 		const TOTAL_CONFIRMED_VOTES = electoralResult?.totalConfirmedVotes || 0;
-		const TOTAL_ABSTENTION_VOTES = electoralResult?.abstentionVotes.vote.total || 0;
+		const TOTAL_ABSTENTION_VOTES = electoralResult?.abstentionVotes.totalVotes || 0;
 		const TOTAL_VOTES = chain([TOTAL_CONFIRMED_VOTES, TOTAL_ABSTENTION_VOTES]).sum().done();
 
 		return {
@@ -35,9 +35,10 @@ function HomePage() {
 		const WALLET_CONNECTED = useStorageDBProvider.dataCached.metamask;
 
 		if (electoralResult && WALLET_CONNECTED) {
-			const { abstentionVotes, confirmedVotes } = electoralResult;
-			const ELECTOR_ABSTENTION_VOTE = abstentionVotes.elector.find(wallet => wallet === WALLET_CONNECTED);
-			const ELECTOR_CONFIRMED_VOTE = confirmedVotes.find(({ elector }) => elector.find(wallet => wallet === WALLET_CONNECTED));
+			const ELECTOR_ABSTENTION_VOTE = electoralResult.abstentionVotes.electors.find(wallet => wallet === WALLET_CONNECTED);
+			const ELECTOR_CONFIRMED_VOTE = electoralResult.confirmedVotes.find(({ electors }) =>
+				electors.find(wallet => wallet === WALLET_CONNECTED)
+			);
 
 			return !!(ELECTOR_ABSTENTION_VOTE || ELECTOR_CONFIRMED_VOTE);
 		}
@@ -47,11 +48,11 @@ function HomePage() {
 
 	const getCandidateList = useCallback(
 		({ confirmedVotes, totalConfirmedVotes }: TypeInfuraData) =>
-			confirmedVotes.map(({ candidate, vote }) => ({
+			confirmedVotes.map(({ candidate, totalVotes }) => ({
 				number: candidate,
 				votesConfirmed: {
-					total: vote.total,
-					totalPercentage: chain(vote.total).divide(totalConfirmedVotes).multiply(100),
+					total: totalVotes,
+					totalPercentage: chain(totalVotes).divide(totalConfirmedVotes).multiply(100),
 				},
 			})),
 		[]

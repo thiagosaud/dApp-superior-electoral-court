@@ -54,16 +54,6 @@ export default function StorageDBProvider({ children }: { children: ReactNode })
 
 	const deleteWalletCached = useCallback(() => remove('@metamask'), [remove]);
 
-	const handleOnChangeStore = useCallback((key: string | null, newValue: TypeMetaMaskStorageData) => {
-		if (key) {
-			const STORAGE_KEY = key as TypeStorageKey;
-
-			if (STORAGE_KEY === '@metamask') {
-				updateMetaMaskData(newValue as TypeMetaMaskStorageData);
-			}
-		}
-	}, []);
-
 	const value: IContextData = useMemo(
 		() => ({
 			healthCheck: {
@@ -89,7 +79,15 @@ export default function StorageDBProvider({ children }: { children: ReactNode })
 				updateMetaMaskData(response.metamaskData);
 				updateIsLoading(false);
 
-				window.onstorage = ({ key, newValue }) => handleOnChangeStore(key, newValue);
+				window.onstorage = ({ key, newValue }) => {
+					if (key) {
+						const STORAGE_KEY = key as TypeStorageKey;
+
+						if (STORAGE_KEY === '@metamask') {
+							updateMetaMaskData(newValue as TypeMetaMaskStorageData);
+						}
+					}
+				};
 			})
 			.catch(() => {
 				toast('Oops... There was a problem loading the database, please try again!', { toastId: 'loading-database', type: 'error' });
@@ -98,7 +96,7 @@ export default function StorageDBProvider({ children }: { children: ReactNode })
 		return () => {
 			window.onstorage = null;
 		};
-	}, [connect, updateIsLoading, handleOnChangeStore]);
+	}, [connect, updateIsLoading]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;
 }

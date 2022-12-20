@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
-import { IContractGetResult } from 'contract/Interfaces';
-import useEthersHook from 'hooks/useEthersHook';
+import { IBallotContractGetResult } from 'contract/Interfaces';
+import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDBHook';
-import { useStorageDBProviderHook } from './useStorageDBProvider';
+import useEthersHook from 'hooks/useEthersHook';
 
 interface IContextData {
 	actions: {
@@ -22,8 +22,8 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 		getElectoralResult: async (): Promise<TypeInfuraData> => ({
 			candidates: [],
 			totalConfirmedVotes: 0,
-			confirmedVotes: [{ candidate: 0, elector: [], vote: { total: 0 } }],
-			abstentionVotes: { elector: [], vote: { total: 0 } },
+			confirmedVotes: [{ candidate: 0, electors: [], totalVotes: 0 }],
+			abstentionVotes: { electors: [], totalVotes: 0 },
 		}),
 	},
 };
@@ -37,7 +37,7 @@ export default function SolidityContractProvider({ children }: { children: React
 	const connect = useCallback(
 		() =>
 			new Promise<void>((resolve, reject) => {
-				if (useEthers.actions.verifyMetaMaskExtension()) {
+				if (useEthers.actions.hasMetaMaskInstalled()) {
 					toast
 						.promise(
 							useEthers.actions.connect(),
@@ -52,7 +52,7 @@ export default function SolidityContractProvider({ children }: { children: React
 							useStorageDBProvider.actions.addWalletInCache(wallet);
 							resolve();
 						})
-						.catch(() => reject());
+						.catch((error: DOMException) => reject(error));
 				}
 			}),
 		[useEthers, useStorageDBProvider]
@@ -74,24 +74,20 @@ export default function SolidityContractProvider({ children }: { children: React
 
 	const getElectoralResult = useCallback(async (): Promise<TypeInfuraData> => {
 		try {
-			const { candidates, totalConfirmedVotes, abstentionVotes, confirmedVotes }: IContractGetResult =
-				await useEthers.states.infura.contract.getResult();
+			const { candidates, totalConfirmedVotes, abstentionVotes, confirmedVotes }: IBallotContractGetResult =
+				await useEthers.states.contract.infura.getResult();
 
 			const CONVERTED_DATA: TypeInfuraData = {
 				totalConfirmedVotes: Number(totalConfirmedVotes._hex),
 				candidates: candidates.map(({ _hex }) => Number(_hex)),
-				confirmedVotes: confirmedVotes.map(({ candidate, elector, vote }) => ({
-					elector,
+				confirmedVotes: confirmedVotes.map(({ candidate, electors, totalVotes }) => ({
+					electors,
 					candidate: Number(candidate._hex),
-					vote: {
-						total: Number(vote.total._hex),
-					},
+					totalVotes: Number(totalVotes._hex),
 				})),
 				abstentionVotes: {
-					elector: abstentionVotes.elector,
-					vote: {
-						total: Number(abstentionVotes.vote.total._hex),
-					},
+					electors: abstentionVotes.electors,
+					totalVotes: Number(abstentionVotes.totalVotes._hex),
 				},
 			};
 
@@ -116,18 +112,18 @@ export default function SolidityContractProvider({ children }: { children: React
 	);
 
 	useEffect(() => {
-		useEthers.states.ethereum?.on(useEthers.events.changed.accounts, accounts =>
+		useEthers.states.provider.ethereum?.on(useEthers.events.changed.accounts, accounts =>
 			useStorageDBProvider.actions.addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData)
 		);
 
-		useEthers.states.ethereum?.on(useEthers.events.changed.chain, chainID => {
+		useEthers.states.provider.ethereum?.on(useEthers.events.changed.chain, chainID => {
 			if (!useEthers.actions.isGoerliNetwork(chainID as string)) {
 				toast('Attention, only use the GOERLI network!', { toastId: useEthers.events.changed.chain, type: 'warning' });
 			}
 		});
 
 		return () => {
-			useEthers.states.ethereum?.removeAllListeners();
+			useEthers.states.provider.ethereum?.removeAllListeners();
 		};
 	}, [useEthers, useStorageDBProvider]);
 
@@ -138,7 +134,7 @@ export const useSolidityContractProvider = () => {
 	const CONTEXT_HOOK = useContext(CONTEXT);
 
 	if (!CONTEXT_HOOK) {
-		throw new Error('useSolidityContractProvider must be used within an SolidityContractProvider.');
+		throw new Error('useSolidityContractProviderHook must be used within an SolidityContractProvider.');
 	}
 
 	return CONTEXT_HOOK;

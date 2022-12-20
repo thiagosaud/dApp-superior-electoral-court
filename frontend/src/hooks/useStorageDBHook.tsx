@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { IContractGetResultConverted } from 'contract/Interfaces';
+import { IBallotContractGetResultConverted } from 'contract/Interfaces';
 
-export type TypeInfuraData = IContractGetResultConverted;
+export type TypeInfuraData = IBallotContractGetResultConverted;
 export type TypeMetaMaskData = string;
 export type TypeStorageKey = '@infura-provider' | '@metamask';
 export type TypeInfuraStorageData = TypeInfuraData | null;
