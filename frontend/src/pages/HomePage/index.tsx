@@ -33,22 +33,23 @@ function HomePage() {
 		};
 	}, [useCalculator, electoralResult]);
 
-	const isDisabledVoteButton = useMemo(() => {
+	const hasVoted = useMemo(() => {
 		const WALLET_CONNECTED = useStorageDBProvider.dataCached.metamask;
 
 		if (electoralResult && WALLET_CONNECTED) {
+			const { abstentionVotes, confirmedVotes } = electoralResult;
+
 			const compare = (electorWallet: string, walletConnected: string) => electorWallet.toUpperCase() === walletConnected.toUpperCase();
+			const HAS_ABSTENTION_VOTE = !!abstentionVotes.electors.find(wallet => compare(wallet, WALLET_CONNECTED));
+			const HAS_CONFIRMED_VOTE = !!confirmedVotes.find(({ electors }) => electors.find(wallet => compare(wallet, WALLET_CONNECTED)));
 
-			const ELECTOR_ABSTENTION_VOTE = electoralResult.abstentionVotes.electors.find(wallet => compare(wallet, WALLET_CONNECTED));
-			const ELECTOR_CONFIRMED_VOTE = electoralResult.confirmedVotes.find(({ electors }) =>
-				electors.find(wallet => compare(wallet, WALLET_CONNECTED))
-			);
-
-			return !!(ELECTOR_ABSTENTION_VOTE || ELECTOR_CONFIRMED_VOTE);
+			return HAS_ABSTENTION_VOTE || HAS_CONFIRMED_VOTE;
 		}
 
 		return !WALLET_CONNECTED;
 	}, [useStorageDBProvider, electoralResult]);
+
+	const isDisabledVoteButton = useMemo(() => hasVoted || isVoting, [hasVoted, isVoting]);
 
 	const getCandidateList = useCallback(
 		({ confirmedVotes, totalConfirmedVotes }: TypeInfuraData) =>
@@ -93,7 +94,7 @@ function HomePage() {
 				<h5 className='mb-0'>President</h5>
 
 				<Suspense fallback={<GenericSkeleton height='38px' width='172px' />}>
-					<LazyAbstainVoteButton onAbstainVote={handleOnAbstainVote} isDisabled={isDisabledVoteButton || isVoting} />
+					<LazyAbstainVoteButton onAbstainVote={handleOnAbstainVote} isDisabled={isDisabledVoteButton} />
 				</Suspense>
 			</div>
 
@@ -101,11 +102,7 @@ function HomePage() {
 				<CandidateListSkeleton />
 			) : (
 				<Suspense fallback={<CandidateListSkeleton />}>
-					<LazyCandidateList
-						onConfirmVote={handleOnConfirmVote}
-						data={getCandidateList(electoralResult)}
-						hasVoted={isDisabledVoteButton || isVoting}
-					/>
+					<LazyCandidateList onConfirmVote={handleOnConfirmVote} data={getCandidateList(electoralResult)} hasVoted={isDisabledVoteButton} />
 				</Suspense>
 			)}
 		</PageTemplate>
