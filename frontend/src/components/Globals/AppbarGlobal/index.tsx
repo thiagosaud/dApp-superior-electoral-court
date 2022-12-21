@@ -5,8 +5,10 @@ import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 import { LazyConnectWalletButton, LazyConnectedWalletButton } from 'utils/LazyLoadingComponents';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { useSolidityContractProviderHook } from 'providers/useSolidityContractProvider';
+import useRouteNavigationHook from 'hooks/useRouteNavigationHook';
 
 export default function AppbarGlobal() {
+	const useRouteNavigation = useRouteNavigationHook();
 	const useSolidityContractProvider = useSolidityContractProviderHook();
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const [isConnectingWallet, updateIsConnectingWallet] = useReducer((state: boolean) => !state, false);
@@ -29,7 +31,11 @@ export default function AppbarGlobal() {
 	return (
 		<Navbar expand='lg' fixed='top' bg='light' variant='light' collapseOnSelect>
 			<Container>
-				<Navbar.Brand className='d-flex gap-2 align-items-center'>
+				<Navbar.Brand
+					style={{ cursor: 'pointer' }}
+					onClick={() => useRouteNavigation.goToHomePage()}
+					className='d-flex gap-2 align-items-center'
+				>
 					<LogotypeUtil size='xs' />
 					<Navbar.Collapse>dApp - Superior Electoral Court</Navbar.Collapse>
 				</Navbar.Brand>
