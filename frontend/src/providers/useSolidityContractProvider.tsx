@@ -49,7 +49,6 @@ export default function SolidityContractProvider({ children }: { children: React
 							useEthers.actions.connect(),
 							{
 								pending: 'Waiting for connection to wallet...',
-								success: 'Successfully connected!',
 								error: 'Oops, You canceled or have other connection with your wallet!',
 							},
 							{ toastId: 'connect', pauseOnFocusLoss: false }
