@@ -9,6 +9,11 @@ interface IUseRouteNavigationHook {
 	openGoerliFaucetPage: () => Window | null;
 }
 
+/**
+ * @thiagosaud
+ * @description This hook is exclusively for controlling the entire Route Navigation flow!
+ * @interface IUseRouteNavigationHook
+ */
 export default function useRouteNavigationHook(): IUseRouteNavigationHook {
 	const navigateHook = useNavigate();
 

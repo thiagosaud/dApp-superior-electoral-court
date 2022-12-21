@@ -14,6 +14,11 @@ const Image = styled.img.attrs({
 	${({ size }) => size === 'md' && { width: '120px', height: '120px' }}
 `;
 
+/**
+ * @thiagosaud
+ * @description This component is exclusive to display the TSE Logo!
+ * @interface IProps
+ */
 export default function LogotypeUtil({ size }: IProps) {
 	return <Image size={size} />;
 }

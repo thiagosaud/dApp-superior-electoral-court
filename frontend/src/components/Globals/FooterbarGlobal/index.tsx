@@ -1,5 +1,9 @@
 import { Button, Container, Navbar } from 'react-bootstrap';
 
+/**
+ * @thiagosaud
+ * @description This component is unique for displaying copyright text in the page footer!
+ */
 export default function FooterbarGlobal() {
 	return (
 		<Container>

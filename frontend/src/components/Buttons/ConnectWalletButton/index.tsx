@@ -5,6 +5,11 @@ interface IProps {
 	isDisabled: boolean;
 }
 
+/**
+ * @thiagosaud
+ * @description This component is unique for connecting wallet to wallet in MetaMask!
+ * @interface IProps
+ */
 function ConnectWalletButton({ onConnect, isDisabled }: IProps) {
 	return (
 		<Button onClick={onConnect} variant='warning' disabled={isDisabled}>

@@ -19,6 +19,10 @@ const WrapperButton = styled.div`
 	align-items: center;
 `;
 
+/**
+ * @thiagosaud
+ * @description This component is exclusively for controlling the FAQ!
+ */
 function HelpPage() {
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const useRouteNavigation = useRouteNavigationHook();

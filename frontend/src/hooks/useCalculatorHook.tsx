@@ -5,6 +5,11 @@ interface IUseCalculator {
 	toPercentage: (valueA: number, valueB: number) => number;
 }
 
+/**
+ * @thiagosaud
+ * @description This hook is exclusive to control the voting calculations!
+ * @interface IUseCalculator
+ */
 export default function useCalculatorHook(): IUseCalculator {
 	const isZeroValue = (value: number) => chain(value).isZero().done();
 

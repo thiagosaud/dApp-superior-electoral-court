@@ -1,5 +1,10 @@
 import { lazy } from 'react';
 
+/**
+ * @thiagosaud
+ * @description This file is unique for controlling the creation of components with LazyLoading!
+ */
+
 const ONE_SECOND = 1000;
 
 export const LazyConnectWalletButton = lazy(() =>

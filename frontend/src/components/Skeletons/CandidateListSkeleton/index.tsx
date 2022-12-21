@@ -2,6 +2,10 @@ import { memo } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import GenericSkeleton from 'components/Skeletons/GenericSkeleton';
 
+/**
+ * @thiagosaud
+ * @description This component is exclusive to control the loading animation of the {CandidateList} component!
+ */
 function CandidateListSkeleton() {
 	return (
 		<ListGroup data-testid='candidate-list-component'>

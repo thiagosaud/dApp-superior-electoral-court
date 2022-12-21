@@ -8,6 +8,11 @@ interface IProps {
 	};
 }
 
+/**
+ * @thiagosaud
+ * @description This component is exclusive to control the counted votes in progress bar!
+ * @interface IProps
+ */
 function VoteProgressBarUtil({ votes: { confirmed, abstention } }: IProps) {
 	const getLabel = useCallback((value: number) => `${value}%`, []);
 

@@ -17,6 +17,11 @@ interface IProps {
 	alt: string;
 }
 
+/**
+ * @thiagosaud
+ * @description This component is exclusively for displaying the Candidates Avatar!
+ * @interface IProps
+ */
 function AvatarUtil({ src, alt }: IProps) {
 	return <Image src={src || SkeletonSRC} alt={alt} />;
 }

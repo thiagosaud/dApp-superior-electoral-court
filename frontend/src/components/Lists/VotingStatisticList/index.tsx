@@ -17,6 +17,11 @@ interface IProps {
 	};
 }
 
+/**
+ * @thiagosaud
+ * @description This component is unique to keep track of all votes obtained, confirmed and count views of the same!
+ * @interface IProps
+ */
 function VotingStatisticList({ isLoading, votes: { confirmed, abstention } }: IProps) {
 	const VoteCount = useCallback(
 		({ title, total, percentage }: { title: 'Confirmed' | 'Abstention'; total: number; percentage: number }) => (

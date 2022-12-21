@@ -5,6 +5,10 @@ import FooterbarGlobal from 'components/Globals/FooterbarGlobal';
 import HomePage from 'pages/HomePage';
 import HelpPage from 'pages/HelpPage';
 
+/**
+ * @thiagosaud
+ * @description This component is unique in that it controls all routing flow and global components!
+ */
 function Router() {
 	return (
 		<BrowserRouter>

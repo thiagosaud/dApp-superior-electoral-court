@@ -15,6 +15,11 @@ interface IContextData {
 	};
 }
 
+/**
+ * @thiagosaud
+ * @description This provider is exclusive because it controls the entire flow of interaction with the Smart Contract!
+ * @interface IContextData
+ */
 const CONTEXT_DEFAULT_DATA: IContextData = {
 	actions: {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function

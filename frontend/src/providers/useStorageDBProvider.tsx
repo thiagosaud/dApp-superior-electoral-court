@@ -43,6 +43,11 @@ const CONTEXT_DEFAULT_DATA: IContextData = {
 
 const CONTEXT = createContext<IContextData>(CONTEXT_DEFAULT_DATA);
 
+/**
+ * @thiagosaud
+ * @description This provider is unique because it controls the entire Caching flow in LocalStorage!
+ * @interface IContextData
+ */
 export default function StorageDBProvider({ children }: { children: ReactNode }) {
 	const { connect, update, remove } = useStorageDBHook();
 	const [isLoading, updateIsLoading] = useState(CONTEXT_DEFAULT_DATA.healthCheck.isLoading);

@@ -20,6 +20,10 @@ const Wrapper = styled.div`
 	}
 `;
 
+/**
+ * @thiagosaud
+ * @description This component is unique to display the loading animation with {ProgressAnimation}!
+ */
 function LoadingUtil() {
 	return <Wrapper />;
 }

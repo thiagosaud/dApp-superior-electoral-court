@@ -36,6 +36,11 @@ interface IUseEthersHook {
 	};
 }
 
+/**
+ * @thiagosaud
+ * @description This hook is exclusive to control the entire flow of MetaMask, Ethers and Infura Providers and contract handling in general!
+ * @interface IUseEthersHook
+ */
 export default function useEthersHook(): IUseEthersHook {
 	const provider = useMemo(
 		() => ({

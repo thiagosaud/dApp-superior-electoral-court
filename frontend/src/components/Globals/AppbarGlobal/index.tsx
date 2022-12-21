@@ -7,6 +7,10 @@ import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { useSolidityContractProviderHook } from 'providers/useSolidityContractProvider';
 import useRouteNavigationHook from 'hooks/useRouteNavigationHook';
 
+/**
+ * @thiagosaud
+ * @description This component is exclusively for displaying navigation, actions regarding MetaMask wallet access control buttons!
+ */
 export default function AppbarGlobal() {
 	const useRouteNavigation = useRouteNavigationHook();
 	const useSolidityContractProvider = useSolidityContractProviderHook();

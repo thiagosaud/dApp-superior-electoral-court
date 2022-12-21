@@ -18,6 +18,17 @@ interface IUseStorageDB {
 	remove: (key: TypeStorageKey) => void;
 }
 
+/**
+ * @thiagosaud
+ * @description This hook is unique to control all caching flow in LocalStorage!
+ * @interface IConnectFunction
+ * @interface IUseStorageDB
+ * @type TypeInfuraData
+ * @type TypeMetaMaskData
+ * @type TypeStorageKey
+ * @type TypeInfuraStorageData
+ * @type TypeMetaMaskStorageData
+ */
 export default function useStorageDBHook(): IUseStorageDB {
 	const dispatchStorageEvent = useCallback((key: TypeStorageKey, value: TypeInfuraStorageData | TypeMetaMaskStorageData) => {
 		let newValue: string | null = null;

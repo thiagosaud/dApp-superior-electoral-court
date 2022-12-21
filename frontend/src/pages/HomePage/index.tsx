@@ -9,6 +9,10 @@ import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
 import { TypeInfuraStorageData, TypeInfuraData } from 'hooks/useStorageDBHook';
 import useCalculatorHook from 'hooks/useCalculatorHook';
 
+/**
+ * @thiagosaud
+ * @description This component is exclusively for controlling the rendering flow and controlling votes!
+ */
 function HomePage() {
 	const useStorageDBProvider = useStorageDBProviderHook();
 	const useSolidityContractProvider = useSolidityContractProviderHook();

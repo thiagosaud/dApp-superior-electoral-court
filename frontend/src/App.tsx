@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
 	}
 `;
 
+/**
+ * @thiagosaud
+ * @description This component is unique in that it controls all main flow components and logic!
+ */
 function App() {
 	const {
 		healthCheck: { isLoading },

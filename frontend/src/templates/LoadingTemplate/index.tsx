@@ -17,6 +17,10 @@ const WrapperLogotype = styled.div`
 	margin-right: 30px;
 `;
 
+/**
+ * @thiagosaud
+ * @description This component is unique for controlling the Global Default Loading!
+ */
 export default function LoadingTemplate() {
 	return (
 		<Wrapper>

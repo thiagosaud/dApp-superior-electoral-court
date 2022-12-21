@@ -9,6 +9,11 @@ interface IProps {
 	isDisabled: boolean;
 }
 
+/**
+ * @thiagosaud
+ * @description This component is exclusive to execute actions from an already connected wallet!
+ * @interface IProps
+ */
 function ConnectedWalletButton({ onLogout, wallet, isDisabled }: IProps) {
 	const navigateHook = useNavigate();
 

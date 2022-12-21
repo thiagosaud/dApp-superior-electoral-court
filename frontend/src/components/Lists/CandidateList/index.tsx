@@ -15,6 +15,11 @@ interface IProps {
 	}[];
 }
 
+/**
+ * @thiagosaud
+ * @description This component is exclusive to control the list of candidates and voting actions and count views of the same!
+ * @interface IProps
+ */
 function CandidateList({ onConfirmVote, hasVoted, data }: IProps) {
 	const getCandidateID = useCallback((id: number) => id + 1, []);
 
