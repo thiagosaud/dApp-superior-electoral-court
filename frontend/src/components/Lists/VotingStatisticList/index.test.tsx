@@ -1,23 +1,21 @@
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import MOCKED_DATA, { IData } from '__test__/mocks/VotingStatisticListMock';
-import VotingStatisticList from '.';
+import VotingStatisticList from 'components/Lists/VotingStatisticList';
 
 describe('[VOTING STATISTIC LIST] - Testing Component', () => {
 	test('Should be have childs component!', () => {
 		render(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
 
-		const listItem = screen.getAllByRole('listitem');
-		const progressBar = screen.getAllByRole('progressbar');
-		const accurateElectorateTitle = screen.getByText(/Accurate Electorate/i);
-		const confirmedTitle = screen.getByText(/Confirmed/i);
-		const abstentionTitle = screen.getByText(/Abstention/i);
+		const LIST_ITEM = screen.getAllByRole('listitem');
+		const ACCURATE_ELECTORATE_TITLE = screen.getByText(/Accurate Electorate/i);
+		const CONFIRMED_TITLE = screen.getByText(/Confirmed/i);
+		const ABSTENTION_TITLE = screen.getByText(/Abstention/i);
 
-		expect(listItem.length).toBeGreaterThanOrEqual(1);
-		expect(progressBar.length).toBeGreaterThanOrEqual(1);
-		expect(accurateElectorateTitle).toBeInTheDocument();
-		expect(confirmedTitle).toBeInTheDocument();
-		expect(abstentionTitle).toBeInTheDocument();
+		expect(LIST_ITEM.length).toBeGreaterThanOrEqual(1);
+		expect(ACCURATE_ELECTORATE_TITLE).toBeInTheDocument();
+		expect(CONFIRMED_TITLE).toBeInTheDocument();
+		expect(ABSTENTION_TITLE).toBeInTheDocument();
 	});
 });
 
@@ -44,29 +42,5 @@ describe('[VOTING STATISTIC LIST] - Testing Component Data', () => {
 		expect(dataProps.confirmed.totalPercentage).toBeLessThanOrEqual(100);
 		expect(dataProps.abstention.totalPercentage).toBeGreaterThanOrEqual(0);
 		expect(dataProps.abstention.totalPercentage).toBeLessThanOrEqual(100);
-	});
-});
-
-describe('[VOTING STATISTIC LIST] - Testing Component Progressbar', () => {
-	test('Should be have aria-valuemin attribute equal 0% and aria-valuemax equal 100%!', () => {
-		render(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
-
-		screen.getAllByRole('progressbar').forEach(bar => {
-			expect(bar).toHaveAttribute('aria-valuemin', '0');
-			expect(bar).toHaveAttribute('aria-valuemax', '100');
-		});
-	});
-
-	test('Should be have aria-valuenow attribute greater than or equal 0% and less then or equal 100%!', () => {
-		render(<VotingStatisticList isLoading votes={MOCKED_DATA} />);
-
-		screen.getAllByRole('progressbar').forEach(bar => {
-			const ariaValueNow = bar.getAttribute('aria-valuenow');
-			const convertedAriaValueNow = parseFloat(ariaValueNow || '-1');
-
-			expect(ariaValueNow).toBeTruthy();
-			expect(convertedAriaValueNow).toBeGreaterThanOrEqual(0);
-			expect(convertedAriaValueNow).toBeLessThan(100);
-		});
 	});
 });

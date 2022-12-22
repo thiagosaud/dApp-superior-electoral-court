@@ -25,7 +25,7 @@ function ConnectedWalletButton({ onLogout, wallet, isDisabled }: IProps) {
 	const goToHelpPage = () => navigateHook('/help');
 
 	return (
-		<DropdownButton variant='warning' align='end' title={hash} disabled={isDisabled}>
+		<DropdownButton variant='warning' align='end' title={hash} disabled={isDisabled} data-testid='dropdown-button'>
 			<Dropdown.Item as='button' onClick={openContractPage}>
 				Logs
 			</Dropdown.Item>

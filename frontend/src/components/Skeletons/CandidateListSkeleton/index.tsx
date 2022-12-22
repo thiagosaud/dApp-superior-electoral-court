@@ -10,7 +10,7 @@ function CandidateListSkeleton() {
 	return (
 		<ListGroup data-testid='candidate-list-component'>
 			{['1', '2', '3', '4', '5', '6'].map(randomNumber => (
-				<ListGroup.Item key={`${randomNumber}`} as='li' className='d-flex flex-wrap gap-2 align-items-center'>
+				<ListGroup.Item key={`${randomNumber}`} as='li' className='d-flex flex-wrap gap-2 align-items-center' data-testid='list-item'>
 					<div className='d-flex justify-content-between align-items-center w-100'>
 						<div className='d-flex flex-wrap align-items-center gap-2'>
 							<GenericSkeleton height='60px' width='60px' isRounded />

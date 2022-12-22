@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import FooterbarGlobal from '.';
+import FooterbarGlobal from 'components/Globals/FooterbarGlobal';
 
 describe('[FOOTER BAR GLOBAL] - Testing Component', () => {
 	test('Should be have childs component!', () => {
 		render(<FooterbarGlobal />);
 
-		const hyperlink = screen.getByText(/Thiago Saud/i);
-		const text = screen.getByText(/© All rights reserved by/i);
+		const HYPERLINK = screen.getByText(/Thiago Saud/i);
+		const TEXT = screen.getByText(/© All rights reserved by/i);
 
-		expect(hyperlink).toBeInTheDocument();
-		expect(text).toBeInTheDocument();
+		expect(HYPERLINK).toBeInTheDocument();
+		expect(TEXT).toBeInTheDocument();
 	});
 });
 

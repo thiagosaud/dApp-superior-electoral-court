@@ -25,7 +25,7 @@ const Wrapper = styled.div`
  * @description This component is unique to display the loading animation with {ProgressAnimation}!
  */
 function LoadingUtil() {
-	return <Wrapper />;
+	return <Wrapper data-testid='wrapper' />;
 }
 
 export default LoadingUtil;

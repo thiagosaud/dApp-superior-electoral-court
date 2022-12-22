@@ -1,11 +1,10 @@
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
-import Avatar from '.';
+import Avatar from 'components/Utils/AvatarUtil';
 
 describe('[AVATAR UTIL] - Testing Component', () => {
 	test('Should be have properties!', () => {
 		const { root } = TestRenderer.create(<Avatar src='Testing...' alt='Testing...' />);
-
 		expect(typeof root.props.src).toBe('string');
 		expect(typeof root.props.alt).toBe('string');
 	});

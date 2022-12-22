@@ -23,8 +23,8 @@ const WrapperLogotype = styled.div`
  */
 export default function LoadingTemplate() {
 	return (
-		<Wrapper>
-			<WrapperLogotype>
+		<Wrapper data-testid='wrapper'>
+			<WrapperLogotype data-testid='wrapper-logotype'>
 				<LogotypeUtil size='md' />
 			</WrapperLogotype>
 
