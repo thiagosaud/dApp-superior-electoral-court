@@ -42,6 +42,7 @@ Use the pattern below:
 ### :guitar: FEAT
 
 - Updated Version, Description, and Added LIB [PACKAGE]
+- Updated [CHANGELOG]
 - Removed [LICENSE]
 
 ### :bulb: REFACTOR
