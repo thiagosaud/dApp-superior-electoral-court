@@ -77,6 +77,17 @@ Use the pattern below:
 
 - Correction in Unit Test [ROUTER]
 
+## Version [2.0.0-rc] (27/12/2022)
+
+### :guitar: FEAT
+
+- Updated Version, Description, and Added LIB [PACKAGE]
+- Removed [LICENSE]
+
+### :bulb: REFACTOR
+
+- Refactored Contracts and Tests
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖

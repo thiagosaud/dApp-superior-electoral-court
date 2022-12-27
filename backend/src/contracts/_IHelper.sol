@@ -7,22 +7,17 @@ pragma solidity >=0.7.0 <0.9.0;
  * @dev Interfaces shared between contracts
  */
 interface IHelper {
-	/** @dev Polling calculation **/
-	struct Vote {
-		uint total;
-	}
-
 	/** @dev Confirming Votes **/
 	struct Confirmed {
 		uint candidate;
-		address[] elector;
-		Vote vote;
+		address[] electors;
+		uint totalVotes;
 	}
 
 	/** @dev Abstention Votes **/
 	struct Abstention {
-		address[] elector;
-		Vote vote;
+		address[] electors;
+		uint totalVotes;
 	}
 
 	/** @dev Election Result **/
