@@ -32,14 +32,6 @@ contract Ballot is IHelper, Guard, Logging {
 	}
 
 	/**
-	 * @dev Return Candidates
-	 * @return value of '_candidates'
-	 */
-	function getCandidates() public view returns (uint[6] memory) {
-		return _candidates;
-	}
-
-	/**
 	 * @dev Return Elector Has Already Voted
 	 * @return value of '_electorHasAlreadyVoted'
 	 */
@@ -65,13 +57,11 @@ contract Ballot is IHelper, Guard, Logging {
 	 * @dev Elector Vote Confirmation
 	 * @param candidateID value to store
 	 */
-	function confirmVote(uint candidateID)
-		public
-		onlyCandidateRegistered(candidateID, _candidates.length)
-		onlyElectorWhoDidNotVote(_electorHasAlreadyVoted[msg.sender])
-	{
-		_confirmedVotes[candidateID].vote.total++;
-		_confirmedVotes[candidateID].elector.push(msg.sender);
+	function confirmVote(
+		uint candidateID
+	) public onlyCandidateRegistered(candidateID, _candidates.length) onlyElectorWhoDidNotVote(_electorHasAlreadyVoted[msg.sender]) {
+		_confirmedVotes[candidateID].totalVotes++;
+		_confirmedVotes[candidateID].electors.push(msg.sender);
 		_confirmedVotes[candidateID].candidate = candidateID;
 
 		_electorHasAlreadyVoted[msg.sender] = true;
@@ -82,9 +72,9 @@ contract Ballot is IHelper, Guard, Logging {
 	}
 
 	/** @dev Elector Vote Abstention **/
-	function abstentionVote() public onlyElectorWhoDidNotVote(_electorHasAlreadyVoted[msg.sender]) {
-		_abstentionVotes.vote.total++;
-		_abstentionVotes.elector.push(msg.sender);
+	function abstainVote() public onlyElectorWhoDidNotVote(_electorHasAlreadyVoted[msg.sender]) {
+		_abstentionVotes.totalVotes++;
+		_abstentionVotes.electors.push(msg.sender);
 
 		_electorHasAlreadyVoted[msg.sender] = true;
 
