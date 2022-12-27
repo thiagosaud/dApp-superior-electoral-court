@@ -50,6 +50,16 @@ Use the pattern below:
 
 - Created new Workflows YML
 
+## Version [2.0.1-rc] (27/12/2022)
+
+### :guitar: FEAT
+
+- Updated Version [PACKAGE]
+
+### :robot: CHORE
+
+- Changed to PR Closed [VERCEL]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖

@@ -1,9 +1,13 @@
 name: VERCEL DEPLOY
 
-on: workflow_call
+on:
+  pull_request:
+    types:
+      - closed
+
 jobs:
   vercel-deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
