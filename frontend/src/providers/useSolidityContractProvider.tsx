@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { IBallotContractGetResult, IBallotContractGetResultConverted } from 'contract/Interfaces';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
@@ -6,6 +6,11 @@ import { TypeInfuraData, TypeMetaMaskData } from 'hooks/useStorageDBHook';
 import useEthersHook from 'hooks/useEthersHook';
 
 interface IContextData {
+	states: {
+		healthCheck: {
+			isLoading: boolean;
+		};
+	};
 	actions: {
 		logout: () => Promise<void>;
 		connect: () => Promise<void>;
@@ -21,6 +26,11 @@ interface IContextData {
  * @interface IContextData
  */
 const CONTEXT_DEFAULT_DATA: IContextData = {
+	states: {
+		healthCheck: {
+			isLoading: true,
+		},
+	},
 	actions: {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		logout: async (): Promise<void> => {},
@@ -44,6 +54,7 @@ const CONTEXT = createContext<IContextData>(CONTEXT_DEFAULT_DATA);
 export default function SolidityContractProvider({ children }: { children: ReactNode }) {
 	const useEthers = useEthersHook();
 	const useStorageDBProvider = useStorageDBProviderHook();
+	const [isLoadingProvider, setIsLoadingProvider] = useState(CONTEXT_DEFAULT_DATA.states.healthCheck.isLoading);
 
 	const connect = useCallback(
 		() =>
@@ -121,8 +132,13 @@ export default function SolidityContractProvider({ children }: { children: React
 	const confirmVote = useCallback(
 		async (candidateID: number) => {
 			try {
-				const CONTRACT_SIGNER = useEthers.states.contract.web3.connect(useEthers.states.provider.web3.getSigner());
+				const SIGNER = useEthers.states.provider.web3?.getSigner();
 
+				if (!SIGNER) {
+					throw new Error('Signer is Undefined!');
+				}
+
+				const CONTRACT_SIGNER = useEthers.states.contract.web3.connect(SIGNER);
 				const ESTIMAGE_GAS = await toast.promise(
 					CONTRACT_SIGNER.estimateGas.confirmVote(candidateID),
 					{
@@ -151,7 +167,13 @@ export default function SolidityContractProvider({ children }: { children: React
 
 	const abstainVote = useCallback(async () => {
 		try {
-			const CONTRACT_SIGNER = useEthers.states.contract.web3.connect(useEthers.states.provider.web3.getSigner());
+			const SIGNER = useEthers.states.provider.web3?.getSigner();
+
+			if (!SIGNER) {
+				throw new Error('Signer is Undefined!');
+			}
+
+			const CONTRACT_SIGNER = useEthers.states.contract.web3?.connect(SIGNER);
 
 			const ESTIMAGE_GAS = await toast.promise(
 				CONTRACT_SIGNER.estimateGas.abstainVote(),
@@ -179,6 +201,11 @@ export default function SolidityContractProvider({ children }: { children: React
 
 	const value: IContextData = useMemo(
 		() => ({
+			states: {
+				healthCheck: {
+					isLoading: isLoadingProvider,
+				},
+			},
 			actions: {
 				connect,
 				logout,
@@ -187,28 +214,33 @@ export default function SolidityContractProvider({ children }: { children: React
 				getElectoralResult,
 			},
 		}),
-		[connect, logout, confirmVote, abstainVote, getElectoralResult]
+		[isLoadingProvider, connect, logout, confirmVote, abstainVote, getElectoralResult]
 	);
 
 	useEffect(() => {
-		useEthers.states.provider.ethereum?.on(useEthers.events.changed.accounts, accounts =>
-			useStorageDBProvider.actions.addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData)
-		);
+		useEthers.actions
+			.loadingProvider()
+			.then(metamaskProvider => {
+				metamaskProvider.on(useEthers.events.changed.accounts, accounts =>
+					useStorageDBProvider.actions.addWalletInCache((accounts as TypeMetaMaskData[])[0] as TypeMetaMaskData)
+				);
 
-		useEthers.states.provider.ethereum?.on(useEthers.events.changed.chain, chainID => {
-			if (!useEthers.actions.isGoerliNetwork(chainID as string)) {
-				toast('Attention, only use the GOERLI network!', { toastId: useEthers.events.changed.chain, type: 'warning' });
-			}
-		});
+				metamaskProvider.on(useEthers.events.changed.chain, chainID => {
+					if (!useEthers.actions.isGoerliNetwork(chainID as string)) {
+						toast('Attention, only use the GOERLI network!', { toastId: useEthers.events.changed.chain, type: 'warning' });
+					}
+				});
 
-		useEthers.states.contract.web3.on('LogElectorVote', (_, electoralResult: IBallotContractGetResult) => {
-			const DATA_CONVERTED = getElectoralResultConverted(electoralResult);
-			useStorageDBProvider.actions.addElectoralResultInCache(DATA_CONVERTED);
-		});
+				useEthers.states.contract.web3?.on('LogElectorVote', (_, electoralResult: IBallotContractGetResult) => {
+					const DATA_CONVERTED = getElectoralResultConverted(electoralResult);
+					useStorageDBProvider.actions.addElectoralResultInCache(DATA_CONVERTED);
+				});
 
-		return () => {
-			useEthers.states.provider.ethereum?.removeAllListeners();
-		};
+				return () => {
+					metamaskProvider.removeAllListeners();
+				};
+			})
+			.finally(() => setIsLoadingProvider(false));
 	}, [useEthers, useStorageDBProvider, getElectoralResultConverted]);
 
 	return <CONTEXT.Provider value={value}>{children}</CONTEXT.Provider>;

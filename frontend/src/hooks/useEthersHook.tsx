@@ -1,11 +1,22 @@
-import { useCallback, useMemo } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
-import { ExternalProvider } from '@ethersproject/providers';
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import MetaMaskOnboarding from '@metamask/onboarding';
+import detectEthereumProvider from '@metamask/detect-provider';
 import BallotContract from 'contract/Ballot.json';
 import { TypeBallotContractFunctionFragment, TypeBallotContractFunctionFragmentParams } from 'contract/Interfaces';
+
+interface IMetaMaskEthereumProvider {
+	isMetaMask?: boolean;
+	once(eventName: string | symbol, listener: (...args: any[]) => void): this;
+	on(eventName: string | symbol, listener: (...args: any[]) => void): this;
+	off(eventName: string | symbol, listener: (...args: any[]) => void): this;
+	addListener(eventName: string | symbol, listener: (...args: any[]) => void): this;
+	removeListener(eventName: string | symbol, listener: (...args: any[]) => void): this;
+	removeAllListeners(event?: string | symbol): this;
+}
 
 interface IUseEthersHook {
 	events: {
@@ -17,7 +28,7 @@ interface IUseEthersHook {
 	states: {
 		provider: {
 			ethereum: MetaMaskInpageProvider | undefined;
-			web3: ethers.providers.Web3Provider;
+			web3: ethers.providers.Web3Provider | undefined;
 		};
 		contract: {
 			web3: ethers.Contract;
@@ -27,6 +38,7 @@ interface IUseEthersHook {
 	actions: {
 		isGoerliNetwork: (chainID: string) => boolean;
 		hasMetaMaskInstalled: () => boolean;
+		loadingProvider: () => Promise<IMetaMaskEthereumProvider>;
 		connect: () => Promise<{ wallet: string }>;
 		sendTransaction: (
 			estimateGas: string,
@@ -42,13 +54,15 @@ interface IUseEthersHook {
  * @interface IUseEthersHook
  */
 export default function useEthersHook(): IUseEthersHook {
+	const [metamaskProvider, setMetamaskProvider] = useState<IMetaMaskEthereumProvider | null>(null);
+
 	const provider = useMemo(
 		() => ({
 			ethereum: window.ethereum as MetaMaskInpageProvider,
-			web3: new ethers.providers.Web3Provider(window.ethereum as ExternalProvider),
+			web3: metamaskProvider ? new ethers.providers.Web3Provider(metamaskProvider, { chainId: 5, name: 'goerli' }) : undefined,
 			infura: ethers.providers.InfuraProvider.getWebSocketProvider({ chainId: 5, name: 'goerli' }),
 		}),
-		[]
+		[metamaskProvider]
 	);
 
 	const contract = useMemo(
@@ -82,6 +96,26 @@ export default function useEthersHook(): IUseEthersHook {
 
 		return false;
 	}, []);
+
+	const loadingProvider = useCallback(
+		async () =>
+			new Promise<IMetaMaskEthereumProvider>((resolve, reject) => {
+				detectEthereumProvider()
+					.then(response => {
+						setTimeout(() => {
+							if (response) {
+								resolve(response);
+								setMetamaskProvider(response);
+							} else {
+								reject(new Error('Provider Metamask does not exist!'));
+							}
+						}, 2500);
+					})
+					.catch((error: DOMException) => reject(error));
+			}),
+
+		[]
+	);
 
 	const connect = useCallback(
 		() =>
@@ -121,13 +155,13 @@ export default function useEthersHook(): IUseEthersHook {
 								],
 							});
 
-							const TRANSACTION_RECEIPT = await provider.web3.waitForTransaction(TRANSACTION as string);
+							const TRANSACTION_RECEIPT = await provider.web3?.waitForTransaction(TRANSACTION as string);
 
-							if (TRANSACTION_RECEIPT.status === 0) {
+							if (TRANSACTION_RECEIPT?.status === 0) {
 								reject();
 							}
 
-							resolve(TRANSACTION_RECEIPT);
+							resolve(TRANSACTION_RECEIPT as ethers.providers.TransactionReceipt);
 						} catch (error) {
 							reject(error);
 						}
@@ -148,6 +182,7 @@ export default function useEthersHook(): IUseEthersHook {
 		actions: {
 			isGoerliNetwork,
 			hasMetaMaskInstalled,
+			loadingProvider,
 			connect,
 			sendTransaction,
 		},

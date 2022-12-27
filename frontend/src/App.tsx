@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { createGlobalStyle } from 'styled-components';
 import LoadingTemplate from 'templates/LoadingTemplate';
 import { useStorageDBProviderHook } from 'providers/useStorageDBProvider';
-import SolidityContractProvider from 'providers/useSolidityContractProvider';
+import SolidityContractProvider, { useSolidityContractProviderHook } from 'providers/useSolidityContractProvider';
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -18,15 +18,20 @@ const GlobalStyle = createGlobalStyle`
  * @description This component is unique in that it controls all main flow components and logic!
  */
 function App() {
-	const {
-		healthCheck: { isLoading },
-	} = useStorageDBProviderHook();
+	const useStorageDBProvider = useStorageDBProviderHook();
+	const useSolidityContractProvider = useSolidityContractProviderHook();
 
 	return (
-		<SolidityContractProvider>
+		<>
 			<GlobalStyle />
 
-			{isLoading ? <LoadingTemplate /> : <Router />}
+			{useStorageDBProvider.healthCheck.isLoading && useSolidityContractProvider.states.healthCheck ? (
+				<LoadingTemplate />
+			) : (
+				<SolidityContractProvider>
+					<Router />
+				</SolidityContractProvider>
+			)}
 
 			<ToastContainer
 				theme='light'
@@ -39,7 +44,7 @@ function App() {
 				pauseOnHover
 				closeOnClick
 			/>
-		</SolidityContractProvider>
+		</>
 	);
 }
 
