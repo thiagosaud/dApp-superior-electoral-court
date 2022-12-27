@@ -59,7 +59,16 @@ export default function SolidityContractProvider({ children }: { children: React
 	const connect = useCallback(
 		() =>
 			new Promise<void>((resolve, reject) => {
-				if (useEthers.actions.hasMetaMaskInstalled()) {
+				const TOAST_OPTIONS = { toastId: 'connect', pauseOnFocusLoss: false };
+				const SMARTPHONE_BROWSER_TYPES = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
+				const IS_SMARTPHONE = SMARTPHONE_BROWSER_TYPES.some(type => navigator.userAgent.match(type));
+
+				if (IS_SMARTPHONE) {
+					toast.error('This DApp does not use WalletConnect for smartphone connection!', TOAST_OPTIONS);
+					reject();
+				}
+
+				if (!IS_SMARTPHONE && useEthers.actions.hasMetaMaskInstalled()) {
 					toast
 						.promise(
 							useEthers.actions.connect(),
@@ -67,7 +76,7 @@ export default function SolidityContractProvider({ children }: { children: React
 								pending: 'Waiting for connection to wallet...',
 								error: 'Oops, You canceled or have other connection with your wallet!',
 							},
-							{ toastId: 'connect', pauseOnFocusLoss: false }
+							TOAST_OPTIONS
 						)
 						.then(({ wallet }) => {
 							useStorageDBProvider.actions.addWalletInCache(wallet);
