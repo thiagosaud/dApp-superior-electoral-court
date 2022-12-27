@@ -26,6 +26,48 @@ This project will be a monorepository, where it will contain the root hierarchy 
 
 Each project will contain its own hierarchy and dependency control, so to learn more about each project, go to each project's main folder.
 
+## :infinity: CI/CD
+
+This project has the following controls:
+
+**FRONTEND WORKFLOW**
+
+| JOB NAME      | DESCRIPTION                       |
+| ------------- | --------------------------------- |
+| RUN PRETTIER  | Test the Style-Guide.             |
+| RUN STYLELINT | Test styling with CSS-In-JS.      |
+| RUN LINT      | Test Syntax Analisys of the code. |
+| RUN JEST      | Unit Test with JEST.              |
+
+**BACKEND WORKFLOW**
+
+| JOB NAME           | DESCRIPTION                             |
+| ------------------ | --------------------------------------- |
+| RUN PRETTIER       | Test the Style-Guide.                   |
+| RUN LINT CONTRACTS | Test Syntax Analisys of the .sol codes. |
+| RUN LINT ALL FILES | Test Syntax Analisys of the all files.  |
+| RUN MOCHA AND CHAI | Unit Test with MOCHA and Chai.          |
+
+**VERCEL WORKFLOW**
+
+| JOB NAME   | DESCRIPTION                          |
+| ---------- | ------------------------------------ |
+| RUN DEPLOY | Build and insertion into production. |
+
+**RECOVER REPOSITORY ENVIRONMENTS SECRET KEYS WORKFLOW**
+
+| JOB NAME                                | DESCRIPTION                                                                                                                                                                                   |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RUN RECOVERING SECRET KEYS WITH OPENSSL | Decrypts the secret environments that are in the github repository. Encrypt them using OPENSSL with a login and password to which only I have access to obtain them and create the .ENV file. |
+
+**WORKFLOW CONTROLLER**
+
+| JOB NAME | DESCRIPTION                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------- |
+| FRONTEND | RUN THE FRONTEND WORKFLOW.                                                                                    |
+| BACKEND  | RUN THE BACKEND WORKFLOW. It is necessary to wait for the FRONTEND workflow to pass all the tests.            |
+| DEPLOY   | RUN THE VERCEL WORKFLOW. It is necessary to wait for the FRONTEND and BACKEND workflow to pass all the tests. |
+
 ## :electric_plug: How it works
 
 ![HOW IT WORKS PREVIEW](https://raw.githubusercontent.com/thiagosaud/dApp-superior-electoral-court/main/temp/imgs/how-its-work.png 'DAPP SUPERIOR ELECTORAL COURT BY THIAGO SAUD')
