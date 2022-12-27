@@ -1,0 +1,48 @@
+name: FRONTEND TEST
+
+on: workflow_call
+jobs:
+  frontend-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        architecture: [x64]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Use Nodejs ${{ matrix.node-version }} - ${{ matrix. architecture }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn [INSTALL]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+          dir: 'frontend' # will run in sub folder
+
+      - name: RUN PRETTIER [TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: prettier:check
+          dir: 'frontend' # will run in sub folder
+
+      - name: RUN STYLELINT [TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: stylelint:check
+          dir: 'frontend' # will run in sub folder
+
+      - name: RUN LINT [TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint
+          dir: 'frontend' # will run in sub folder
+
+      - name: RUN JEST [UNIT TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
+          dir: 'frontend' # will run in sub folder
