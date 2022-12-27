@@ -1,8 +1,8 @@
 {
-	"name": "hardhat-project",
-	"version": "1.0.1@alpha",
+	"name": "superior-electoral-court-contract",
+	"version": "2.0.0-rc",
 	"license": "MIT",
-	"description": "",
+	"description": "This project is the smart contract for Superior Electoral Court (TSE).",
 	"author": {
 		"name": "THIAGO DE BONIS CARVALHO SAAD SAUD",
 		"url": "https://www.linkedin.com/in/thiagosaud/"
@@ -24,7 +24,8 @@
 		"lint:check": "eslint \"src/**/*.ts\" --max-warnings 0"
 	},
 	"dependencies": {
-		"dotenv": "^16.0.3"
+		"dotenv": "^16.0.3",
+		"typescript": "^4.8.4"
 	},
 	"devDependencies": {
 		"@ethersproject/abi": "^5.7.0",
@@ -61,10 +62,11 @@
 		"hardhat": "^2.11.2",
 		"hardhat-gas-reporter": "^1.0.9",
 		"prettier": "^2.7.1",
-		"prettier-plugin-solidity": "^1.0.0-beta.24",
+		"prettier-plugin-solidity": "^1.1.0",
 		"solhint": "^3.3.7",
 		"solhint-plugin-prettier": "^0.0.5",
 		"solidity-coverage": "^0.8.2",
+		"ts-node": "^10.9.1",
 		"typechain": "^8.1.0"
 	}
 }
