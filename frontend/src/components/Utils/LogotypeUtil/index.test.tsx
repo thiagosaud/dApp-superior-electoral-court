@@ -40,8 +40,8 @@ describe('[LOGOTYPE UTIL] - Testing Img Child Component', () => {
 		test('Should be have MD styles properties!', () => {
 			render(<Logotype size='md' />);
 			expect(screen.getByRole('img')).toHaveStyle({
-				width: '120px',
-				height: '120px',
+				width: '85px',
+				height: '85px',
 			});
 		});
 	});

@@ -11,7 +11,7 @@ const Image = styled.img.attrs({
 	loading: 'eager',
 })<IProps>`
 	${({ size }) => size === 'xs' && { width: '35px', height: '35px' }}
-	${({ size }) => size === 'md' && { width: '120px', height: '120px' }}
+	${({ size }) => size === 'md' && { width: '85px', height: '85px' }}
 `;
 
 /**
