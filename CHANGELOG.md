@@ -36,6 +36,20 @@ Use the pattern below:
 - Sudo chmod ug+x .husky/\*
 - Updated Version [PACKAGE.JSON]
 
+## Version [2.0.0-rc] (27/12/2022)
+
+### :guitar: FEAT
+
+- Added Vercel FOLDER [GITIGNORE]
+- Added LINK URL [README]
+- Changed the Job Name [RECOVER_REPOSITORY_SECREY_KEYS]
+- Updated Version [PACKAGE]
+- Changed Social Preview
+
+### :robot: CHORE
+
+- Created new Workflows YML
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
