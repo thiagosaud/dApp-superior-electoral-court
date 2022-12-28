@@ -1,6 +1,6 @@
 {
 	"name": "dApp-superior-electoral-court",
-	"version": "2.0.1-rc",
+	"version": "2.0.2-rc",
 	"license": "MIT",
 	"description": "In this open source project, I use smart contract (solidity), blockchain and WEB3 technology to simulate TSE ballot boxes and, most importantly, with incorruptible transparent votes.",
 	"keywords": [
