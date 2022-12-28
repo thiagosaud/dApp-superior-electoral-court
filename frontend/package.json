@@ -1,6 +1,6 @@
 {
 	"name": "frontend",
-	"version": "2.0.0-rc",
+	"version": "2.0.1-rc",
 	"license": "MIT",
 	"description": "This is our open source frontend project. In this project we can analyze the development of our dApp with reactjs, typescript, ethers and etc.",
 	"author": {

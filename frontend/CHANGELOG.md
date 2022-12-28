@@ -162,5 +162,11 @@ Use the pattern below:
 - Correction in Smartphone Wallet Connect
 - Correction in Provider
 
+## Version [2.0.1-rc] (28/12/2022)
+
+### :guitar: FEAT
+
+- Updated OG:URL [HTML]
+
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
 BY [THIAGO DE BONIS CARVALHO SAAD SAUD SAUD](https://www.linkedin.com/in/thiagosaud/)**
