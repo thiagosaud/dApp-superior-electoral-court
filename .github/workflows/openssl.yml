@@ -18,18 +18,32 @@ jobs:
       - env:
           MY_OPENSSL_PASSWORD: ${{ secrets.MY_OPENSSL_PASSWORD }}
           MY_OPENSSL_ITER: ${{ secrets.MY_OPENSSL_ITER }}
+
           REACT_APP_SOLIDITY_CONTRACT_ADDRESS: ${{ secrets.REACT_APP_SOLIDITY_CONTRACT_ADDRESS }}
+          REACT_APP_WALLET_PRIVATE_KEY: ${{ secrets.REACT_APP_WALLET_PRIVATE_KEY }}
+
           INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
           INFURA_API_SECRET_KEY: ${{ secrets.INFURA_API_SECRET_KEY }}
           INFURA_GOERLI_URL: ${{ secrets.INFURA_GOERLI_URL }}
           WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
           ETHERSCAN_PRIVATE_KEY: ${{ secrets.ETHERSCAN_PRIVATE_KEY }}
+
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           echo "REACT_APP_SOLIDITY_CONTRACT_ADDRESS (openssl) = $(echo "${REACT_APP_SOLIDITY_CONTRACT_ADDRESS}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+          echo "REACT_APP_WALLET_PRIVATE_KEY (openssl) = $(echo "${REACT_APP_WALLET_PRIVATE_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+
           echo "INFURA_API_KEY (openssl) = $(echo "${INFURA_API_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "INFURA_API_SECRET_KEY (openssl) = $(echo "${INFURA_API_SECRET_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "INFURA_GOERLI_URL (openssl) = $(echo "${INFURA_GOERLI_URL}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "WALLET_PRIVATE_KEY (openssl) = $(echo "${WALLET_PRIVATE_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "ETHERSCAN_PRIVATE_KEY (openssl) = $(echo "${ETHERSCAN_PRIVATE_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+
+          echo "VERCEL_ORG_ID (openssl) = $(echo "${VERCEL_ORG_ID}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+          echo "VERCEL_PROJECT_ID (openssl) = $(echo "${VERCEL_PROJECT_ID}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+          echo "VERCEL_TOKEN (openssl) = $(echo "${VERCEL_TOKEN}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+
           echo "Copy the above value, and then execute locally:"
           echo "echo PASTE_HASH_HERE | openssl base64 -d | openssl enc -d -pbkdf2 -iter \$MY_OPENSSL_ITER -aes-256-cbc -k \$MY_OPENSSL_PASSWORD"
