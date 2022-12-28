@@ -1,0 +1,10 @@
+name: WORKFLOW CONTROLLER
+
+on: [workflow_dispatch, pull_request]
+
+jobs:
+  frontend:
+    uses: ./.github/workflows/frontend-test.yml
+  backend:
+    needs: frontend
+    uses: ./.github/workflows/backend-test.yml

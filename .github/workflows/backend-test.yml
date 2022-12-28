@@ -1,0 +1,51 @@
+name: BACKEND TEST
+
+on: workflow_call
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        architecture: [x64]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Use Nodejs ${{ matrix.node-version }} - ${{ matrix. architecture }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn [INSTALL]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+          dir: 'backend' # will run in sub folder
+
+      - name: RUN PRETTIER [TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: prettier:check
+          dir: 'backend' # will run in sub folder
+
+      - name: RUN LINT CONTRACTS [TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint-contracts:check
+          dir: 'backend' # will run in sub folder
+
+      - name: RUN LINT ALL FILES [TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint:check
+          dir: 'backend' # will run in sub folder
+
+      - name: RUN MOCHA AND CHAI [UNIT TEST]
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
+          dir: 'backend' # will run in sub folder
+        env:
+          INFURA_GOERLI_URL: ${{ secrets.INFURA_GOERLI_URL }}
+          WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}

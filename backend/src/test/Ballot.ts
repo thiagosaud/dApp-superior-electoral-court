@@ -4,19 +4,15 @@ import { Contract, ContractFactory } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 
-interface IVote {
-	total: number;
-}
-
 interface ConfirmedVote {
 	candidate: number;
-	elector: string[];
-	vote: IVote;
+	electors: string[];
+	totalVotes: number;
 }
 
 interface IAbstentionVotes {
-	elector: string[];
-	vote: IVote;
+	electors: string[];
+	totalVotes: number;
 }
 
 interface IGetResult {
@@ -49,14 +45,15 @@ describe("Ballot [Contract]", () => {
 
 describe("Ballot [Initial Data]", () => {
 	describe("Candidates", () => {
-		let candidates: number[] = [];
+		let confirmedVotes: ConfirmedVote[];
 
 		beforeEach(async () => {
-			candidates = await contract.getCandidates();
+			const RESULT: IGetResult = await contract.getResult();
+			confirmedVotes = RESULT.confirmedVotes;
 		});
 
 		it("Should have Six (6) Candidates!", () => {
-			expect(candidates).to.have.lengthOf(6);
+			expect(confirmedVotes).to.have.lengthOf(6);
 		});
 	});
 
@@ -89,25 +86,25 @@ describe("Ballot [Initial Data]", () => {
 			});
 
 			it("Should have Zero (0) Electors!", () => {
-				confirmedVotes.forEach(({ elector }) => {
-					expect(elector).to.have.lengthOf(0);
+				confirmedVotes.forEach(({ electors }) => {
+					expect(electors).to.have.lengthOf(0);
 				});
 			});
 
 			it("Should have Zero (0) Total Votes!", () => {
-				confirmedVotes.forEach(({ vote }) => {
-					expect(vote.total).to.equal(0);
+				confirmedVotes.forEach(({ totalVotes }) => {
+					expect(totalVotes).to.equal(0);
 				});
 			});
 		});
 
 		describe("Abstention", () => {
 			it("Should have Zero (0) Total Votes!", () => {
-				expect(abstentionVotes.vote.total).to.equal(0);
+				expect(abstentionVotes.totalVotes).to.equal(0);
 			});
 
 			it("Should have Zero (0) Electors!", () => {
-				expect(abstentionVotes.elector).to.have.lengthOf(0);
+				expect(abstentionVotes.electors).to.have.lengthOf(0);
 			});
 		});
 	});
@@ -126,14 +123,14 @@ describe("Ballot [Vote]", () => {
 		});
 
 		[6, 7, 8, 9, 10, 11].forEach(async index => {
-			await expect(contract.connect(signers[index]).abstentionVote()).not.to.be.reverted;
+			await expect(contract.connect(signers[index]).abstainVote()).not.to.be.reverted;
 		});
 
 		await expect(contract.connect(signers[12]).confirmVote(0))
 			.to.emit(contract, "LogElectorVote")
 			.withArgs("Vote Confirmed and Computed!", anyValue);
 
-		await expect(contract.connect(signers[13]).abstentionVote())
+		await expect(contract.connect(signers[13]).abstainVote())
 			.to.emit(contract, "LogElectorVote")
 			.withArgs("Vote Abstained and Computed!", anyValue);
 	});
@@ -143,19 +140,19 @@ describe("Ballot [Vote]", () => {
 
 		expect(RESULT.totalConfirmedVotes).to.be.equal(7);
 
-		RESULT.confirmedVotes.forEach(({ vote, elector }, index) => {
+		RESULT.confirmedVotes.forEach(({ totalVotes, electors }, index) => {
 			const CANDIDATE_ID = index;
 
-			expect(vote.total).to.be.equal(CANDIDATE_ID === 0 ? 2 : 1);
-			expect(elector).to.be.lengthOf(CANDIDATE_ID === 0 ? 2 : 1);
+			expect(totalVotes).to.be.equal(CANDIDATE_ID === 0 ? 2 : 1);
+			expect(electors).to.be.lengthOf(CANDIDATE_ID === 0 ? 2 : 1);
 		});
 	});
 
 	it("Should have Six (7) Electors Abstention Votes!", async () => {
 		const RESULT: IGetResult = await contract.getResult();
 
-		expect(RESULT.abstentionVotes.vote.total).to.be.equal(7);
-		expect(RESULT.abstentionVotes.elector).to.be.lengthOf(7);
+		expect(RESULT.abstentionVotes.totalVotes).to.be.equal(7);
+		expect(RESULT.abstentionVotes.electors).to.be.lengthOf(7);
 	});
 
 	it("Should block the Elector vote if the candidate does not exist!", async () => {
@@ -164,6 +161,6 @@ describe("Ballot [Vote]", () => {
 
 	it("Should block the same Elector who has already voted!", async () => {
 		await expect(contract.connect(signers[0]).confirmVote(0)).to.be.revertedWith("This elector already voted!");
-		await expect(contract.connect(signers[0]).abstentionVote()).to.be.revertedWith("This elector already voted!");
+		await expect(contract.connect(signers[0]).abstainVote()).to.be.revertedWith("This elector already voted!");
 	});
 });

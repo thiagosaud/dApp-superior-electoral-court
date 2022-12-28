@@ -1,0 +1,27 @@
+name: VERCEL DEPLOY
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  vercel-deploy:
+    if: ${{ github.ref == 'refs/heads/main' && github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        architecture: [x64]
+    steps:
+      - name: Check out Git Repository
+        uses: actions/checkout@v3
+
+      - name: RUN DEPLOY [VERCEL]
+        uses: amondnet/vercel-actions@v20
+        with:
+          vercel-args: '--prod'
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
