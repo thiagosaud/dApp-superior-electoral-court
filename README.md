@@ -26,7 +26,7 @@ This project will be a monorepository, where it will contain the root hierarchy 
 
 Each project will contain its own hierarchy and dependency control, so to learn more about each project, go to each project's main folder.
 
-:link: [To interact with the project you can access this link [CLICK HERE]](https://dapp-superior-electoral-court-k00com6y7-thiagosaud.vercel.app/)
+:link: [To interact with the project you can access this link [CLICK HERE]](https://dapp-superior-electoral-court-thiagosaud.vercel.app/)
 
 ## :infinity: CI/CD
 
