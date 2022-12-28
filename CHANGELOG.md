@@ -77,6 +77,12 @@ Use the pattern below:
 - Changed the file path [PULL_REQUEST_TEMPLATE.md]
 - Correction in Deploy [VERCEL_YML]
 
+## Version [2.0.3-rc] (28/12/27022)
+
+### :guitar: FEAT
+
+- Changed Link URL [README]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
