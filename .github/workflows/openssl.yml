@@ -6,12 +6,12 @@
 #                   High values increase the time required to brute-force the resulting file.
 #                   This option enables the use of PBKDF2 algorithm to derive the key.
 
-name: Recover Repository Environments Secret Keys
-on: workflow_dispatch
+name: RECOVER SECRET KEYS WITH OPENSSL
 
+on: workflow_dispatch
 jobs:
   openssl:
-    name: RUN RECOVERING SECRET KEYS WITH OPENSSL
+    name: RUN RECOVERING SECRET KEYS
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3

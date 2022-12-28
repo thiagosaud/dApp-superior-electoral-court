@@ -60,6 +60,16 @@ Use the pattern below:
 
 - Changed to PR Closed [VERCEL]
 
+## Version [2.0.2-rc] (28/12/27022)
+
+### :guitar: FEAT
+
+- Updated Version [PACKAGE]
+
+### :bulb: REFACTOR
+
+- Changed File Name, Added new Trigger [WORKFLOWS]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
