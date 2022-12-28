@@ -65,15 +65,17 @@ Use the pattern below:
 ### :guitar: FEAT
 
 - Updated Version [PACKAGE]
+- Added new Steps [OPENSSL_YML]
 
 ### :bulb: REFACTOR
 
 - Changed File Name, Added new Trigger [WORKFLOWS]
+- Returning to the Original Version [VERCEL_YML]
 
 ### :bug: FIX
 
 - Changed the file path [PULL_REQUEST_TEMPLATE.md]
-- Correction in Deploy [VERCEL YML]
+- Correction in Deploy [VERCEL_YML]
 
 ---
 
