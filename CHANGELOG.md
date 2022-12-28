@@ -70,6 +70,10 @@ Use the pattern below:
 
 - Changed File Name, Added new Trigger [WORKFLOWS]
 
+### :bug: FIX
+
+- Changed the file path [PULL_REQUEST_TEMPLATE.md]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
