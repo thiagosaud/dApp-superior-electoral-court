@@ -73,6 +73,7 @@ Use the pattern below:
 ### :bug: FIX
 
 - Changed the file path [PULL_REQUEST_TEMPLATE.md]
+- Correction in Deploy [VERCEL YML]
 
 ---
 
