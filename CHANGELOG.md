@@ -83,6 +83,13 @@ Use the pattern below:
 
 - Changed Link URL [README]
 
+## Version [2.0.4-rc] (29/12/27022)
+
+### :bulb: REFACTOR
+
+- Changed the Step Names and Added Env [OPENSSL]
+- Changed The step Names [YMLS]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖

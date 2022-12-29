@@ -1,4 +1,4 @@
-name: VERCEL DEPLOY
+name: VERCEL DEPLOY [PRD]
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
       - name: Check out Git Repository
         uses: actions/checkout@v3
 
-      - name: RUN DEPLOY [VERCEL]
+      - name: RUN DEPLOY
         uses: amondnet/vercel-action@v20
         with:
           working-directory: frontend
