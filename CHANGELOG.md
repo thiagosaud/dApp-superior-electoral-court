@@ -83,18 +83,20 @@ Use the pattern below:
 
 - Changed Link URL [README]
 
-## Version [2.0.4-rc] (29/12/27022)
+## Version [2.0.4-rc] (29/12/2022)
+
+### :guitar: FEAT
+
+- Removed [VERCEL_YML]
+
+### :pencil2: DOCS
+
+- Updated [README]
 
 ### :bulb: REFACTOR
 
 - Changed the Step Names and Added Env [OPENSSL]
 - Changed The step Names [YMLS]
 
-### :bug: FIX
-
-- Correction in Working Directory [VERCEL_YML]
-
----
-
-**THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
-BY [THIAGO DE BONIS CARVALHO SAAD SAUD SAUD](https://www.linkedin.com/in/thiagosaud/)**
+  **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
+  BY [THIAGO DE BONIS CARVALHO SAAD SAUD SAUD](https://www.linkedin.com/in/thiagosaud/)**
