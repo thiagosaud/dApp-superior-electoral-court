@@ -12,6 +12,7 @@
 | WEB-VITALS            | [LINK](https://web.dev/i18n/pt/vitals/)                               |
 | TYPESCRIPT            | [LINK](https://www.typescriptlang.org/)                               |
 | ESLINT                | [LINK](https://eslint.org/)                                           |
+| EDITORCONFIG          | [LINK](hhttps://editorconfig.org/)                                    |
 | STYLELINT             | [LINK](https://stylelint.io/)                                         |
 | STYLED-COMPONENTS     | [LINK](https://styled-components.com/)                                |
 | POSTCSS               | [LINK](https://postcss.org/)                                          |
@@ -19,6 +20,7 @@
 | MATHJS                | [LINK](https://mathjs.org/docs/reference/functions/format.html)       |
 | ETHERS                | [LINK](https://docs.ethers.org/v5/getting-started/)                   |
 | METAMASK              | [LINK](https://docs.metamask.io/guide/#why-metamask)                  |
+| JEST                  | [LINK](https://jestjs.io/pt-BR/)                                      |
 
 ## :wrench: Frontend Techniques
 
@@ -34,6 +36,7 @@
 | GIT HOOKS CONTROL AND STANDARDIZATION | HUSKY                          |
 | ARCHITECTURE FOLDERS AND FILES DESIGN | ATOMIC DESIGN                  |
 | RESPONSIVE DESIGN                     | MOBILE FIRST, FLEXBOX AND GRID |
+| UNIT TEST                             | JEST                           |
 
 ## :electric_plug: How it works
 
