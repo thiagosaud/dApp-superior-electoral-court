@@ -90,6 +90,10 @@ Use the pattern below:
 - Changed the Step Names and Added Env [OPENSSL]
 - Changed The step Names [YMLS]
 
+### :bug: FIX
+
+- Correction in Working Directory [VERCEL_YML]
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
