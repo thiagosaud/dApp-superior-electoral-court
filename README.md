@@ -50,17 +50,11 @@ This project has the following controls:
 | RUN LINT ALL FILES | Test Syntax Analisys of the all files.  |
 | RUN MOCHA AND CHAI | Unit Test with MOCHA and Chai.          |
 
-**VERCEL WORKFLOW**
+**DECRYPT SECRET KEYS**
 
-| JOB NAME   | DESCRIPTION                          |
-| ---------- | ------------------------------------ |
-| RUN DEPLOY | Build and insertion into production. |
-
-**RECOVER REPOSITORY ENVIRONMENTS SECRET KEYS WORKFLOW**
-
-| JOB NAME                                | DESCRIPTION                                                                                                                                                                                   |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| RUN RECOVERING SECRET KEYS WITH OPENSSL | Decrypts the secret environments that are in the github repository. Encrypt them using OPENSSL with a login and password to which only I have access to obtain them and create the .ENV file. |
+| JOB NAME                  | DESCRIPTION                                                                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RUN SECRET KEY DECRYPTION | Decrypts the secret environments that are in the github repository. Encrypt them using OPENSSL with a login and password to which only I have access to obtain them and create the .ENV file. |
 
 **WORKFLOW CONTROLLER**
 
