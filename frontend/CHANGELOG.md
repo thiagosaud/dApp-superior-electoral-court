@@ -168,5 +168,11 @@ Use the pattern below:
 
 - Updated OG:URL [HTML]
 
+## Version [2.0.2-rc] (29/12/2022)
+
+### :pencil2: DOCS
+
+- Updated [README]
+
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
 BY [THIAGO DE BONIS CARVALHO SAAD SAUD SAUD](https://www.linkedin.com/in/thiagosaud/)**
