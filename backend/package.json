@@ -1,6 +1,6 @@
 {
 	"name": "superior-electoral-court-contract",
-	"version": "2.0.0-rc",
+	"version": "2.0.1-rc",
 	"license": "MIT",
 	"description": "This project is the smart contract for Superior Electoral Court (TSE).",
 	"author": {
