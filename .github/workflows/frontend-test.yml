@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Yarn [INSTALL]
+      - name: RUN YARN INSTALL
         uses: borales/actions-yarn@v4
         with:
           cmd: install
