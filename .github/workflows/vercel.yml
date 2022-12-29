@@ -21,7 +21,7 @@ jobs:
       - name: RUN DEPLOY
         uses: amondnet/vercel-action@v20
         with:
-          working-directory: frontend
+          working-directory: 'frontend'
           vercel-args: '--prod'
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
