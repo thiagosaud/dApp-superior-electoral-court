@@ -49,6 +49,12 @@ Use the pattern below:
 
 - Refactored Contracts and Tests
 
+## Version [2.0.1-rc] (29/12/2022)
+
+### :guitar: FEAT
+
+- Updated README and CHANGELOG
+
 ---
 
 **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
