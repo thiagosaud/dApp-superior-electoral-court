@@ -98,5 +98,11 @@ Use the pattern below:
 - Changed the Step Names and Added Env [OPENSSL]
 - Changed The step Names [YMLS]
 
+## Version [2.0.5-rc] (06/01/2023)
+
+### :bulb: REFACTOR
+
+- Changed the Description and Added new Metas [INDEX]
+
   **THANK YOU FOR YOUR CONTRIBUTION TO THE PROJECT. 💖
   BY [THIAGO DE BONIS CARVALHO SAAD SAUD SAUD](https://www.linkedin.com/in/thiagosaud/)**

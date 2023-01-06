@@ -18,7 +18,7 @@
 		"compile": "yarn clean && npx hardhat compile",
 		"deploy:testnet": "yarn clean && yarn compile && npx hardhat run src/scripts/deploy.ts",
 		"verify:testnet": "npx hardhat verify --network goerli",
-		"test": "yarn clean && npx hardhat test --network hardhat",
+		"test": "npx hardhat clean && npx hardhat test --network hardhat",
 		"prettier:check": "prettier src/contracts/**/*.sol --check",
 		"lint-contracts:check": "npx solhint src/contracts/**/*.sol --max-warnings 0",
 		"lint:check": "eslint \"src/**/*.ts\" --max-warnings 0"
